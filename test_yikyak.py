@@ -1,4 +1,4 @@
-
+import json
 import unittest
 from unittest import mock
 
@@ -107,6 +107,22 @@ class TestSuite(unittest.TestCase):
         }
 
         mock_request.assert_called_with('PUT', url, headers=headers, params=params)        
+
+    @mock.patch('yikyak.requests')
+    def test_request_invalid_json(self, mock_request):
+        """
+        Assert that _request() will still work if a JSONDecodeError occurs
+
+        Exception should result in an empty dict being returned
+        """
+        # Mock response object
+        mock_response = mock.Mock()
+        mock_response.json.side_effect = json.decoder.JSONDecodeError('', '', 0)
+        mock_request.request.return_value = mock_response
+
+        yakker = YikYak()
+        response = yakker._request('', '')
+        self.assertEqual(response, {})
 
 
 if __name__ == "__main__":

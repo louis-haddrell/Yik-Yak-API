@@ -1,5 +1,8 @@
 import requests
 import settings
+import urllib.parse
+
+from json.decoder import JSONDecodeError
 
 from yak import Yak
 
@@ -11,7 +14,11 @@ class YikYak(object):
     def _request(self, method, url, **kwargs):
         response = requests.request(method, url, **kwargs)
         response.raise_for_status()
-        return response.json()
+
+        try:
+            return response.json()
+        except JSONDecodeError:
+            return {}
 
     def login(self, country_code, phone_number, pin):
         """
