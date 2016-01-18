@@ -8,6 +8,11 @@ class YikYak(object):
     def __init__(self):
         self.auth_token = None
 
+    def _request(self, method, url, **kwargs):
+        response = requests.request(method, url, **kwargs)
+        response.raise_for_status()
+        return response.json()
+
     def init_pairing(self, user_id):
         """
         Initialise web pairing and retrieve authentication PIN
@@ -19,11 +24,9 @@ class YikYak(object):
             6 digit PIN code for use with pairing
         """
         url = "https://beta.yikyak.com/api/auth/initPairing"
-        data = {
-            'userID': user_id
-        }
-        response = requests.post(url, data=data)
-        return response.json()['pin']
+        data = {'userID': user_id}
+        response = self._request('POST', url, data=data)
+        return response['pin']
 
     def pair(self, country_code, phone_number, pin):
         """
@@ -38,19 +41,15 @@ class YikYak(object):
             Authentication token required for further YikYak access
         """
         url = "https://beta.yikyak.com/api/auth/pair"
-
-        headers = {
-            'Referer': 'https://beta.yikyak.com/',
-        }
-
-        payload = {
+        headers = {'Referer': 'https://beta.yikyak.com/'}
+        json = {
             'countryCode': country_code,
             'phoneNumber': phone_number,
             'pin': pin,
         }
 
-        response = requests.post(url, headers=headers, json=payload)
-        return response.json()
+        response = self._request('POST', url, headers=headers, json=json)
+        return response
 
 
 if __name__ == "__main__":
