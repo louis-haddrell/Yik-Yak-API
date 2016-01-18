@@ -100,18 +100,21 @@ class YikYak(object):
         yaks = [Yak(data) for data in response]
         return yaks
 
-    def upvote(self, yak):
+    def _vote(self, action, yak):
         """
-        Upvote a Yak
+        Internal function to upvote / downvote a Yak
 
         Arguments:
-            yak (Yak): Yak to upvote
+            action (string): downvote / upvote
+            yak (Yak): Yak to vote on
         """
+        assert action in ['downvote', 'upvote']
+
         # Convert / to %2F
         yak_id = urllib.parse.quote_plus(yak.messageID)
 
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/upvote'
-        url = url.format(yak_id)
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/{}'
+        url = url.format(yak_id, action)
 
         headers = {
             'Referer': 'https://beta.yikyak.com/',
@@ -125,6 +128,24 @@ class YikYak(object):
         }
 
         self._request('PUT', url, headers=headers, params=params)
+
+    def downvote(self, yak):
+        """
+        Downvote a Yak
+
+        Arguments:
+            yak (Yak): Yak to downvote
+        """
+        self._vote('downvote', yak)
+
+    def upvote(self, yak):
+        """
+        Upvote a Yak
+
+        Arguments:
+            yak (Yak): Yak to upvote
+        """
+        self._vote('upvote', yak)
 
 
 if __name__ == "__main__":
