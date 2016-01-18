@@ -13,6 +13,29 @@ class YikYak(object):
         response.raise_for_status()
         return response.json()
 
+    def login(self, country_code, phone_number, pin):
+        """
+        Login to YikYak and get our auth token
+
+        Arguments:
+            country_code (string): country code
+            phone_number (string): phone number
+            user_id (string): authentication PIN from app
+        """
+        self.auth_token = self.pair(country_code, phone_number, pin)
+
+    def login_id(self, country_code, phone_number, user_id):
+        """
+        Alternate login with YikYak user ID instead of auth PIN
+
+        Arguments:
+            country_code (string): country code
+            phone_number (string): phone number
+            user_id (string): YikYak user ID
+        """
+        pin = self.init_pairing(user_id)
+        self.auth_token = self.pair(country_code, phone_number, pin)
+
     def init_pairing(self, user_id):
         """
         Initialise web pairing and retrieve authentication PIN
@@ -54,3 +77,4 @@ class YikYak(object):
 
 if __name__ == "__main__":
     yakker = YikYak()
+    yakker.auth_token = settings.AUTH_TOKEN
