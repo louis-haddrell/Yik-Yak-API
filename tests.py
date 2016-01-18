@@ -31,6 +31,30 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(token, "authtoken")
         mock_request.post.assert_called_with(url, headers=headers, json=json)
 
+    @mock.patch('yikyak.requests')
+    def test_init_pairing(self, mock_request):
+        """
+        Assert init_pairing() makes API call to retrieve auth PIN
+        """
+        yakker = YikYak("", "", "")
+
+        # Mock response
+        mock_resp = mock.Mock()
+        mock_resp.json.return_value = {
+            'ttl': 60,
+            'pin': '123456',
+        }
+        mock_request.post.return_value = mock_resp
+
+        # Assert PIN is returned
+        pin = yakker.init_pairing("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345")
+        self.assertEqual(pin, '123456')
+
+        # Assert API request is correct
+        url = "https://beta.yikyak.com/api/auth/initPairing"
+        data = {'userID': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345'}
+        mock_request.post.assert_called_with(url, data=data)
+
 
 if __name__ == "__main__":
     unittest.main()

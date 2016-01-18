@@ -8,6 +8,23 @@ class YikYak(object):
     def __init__(self, country_code, phone_number, pin):
         self.auth_token = self._login(country_code, phone_number, pin)
 
+    def init_pairing(self, user_id):
+        """
+        Initialise web pairing and retrieve authentication PIN
+
+        Arguments:
+            user_id (string): YikYak user ID
+
+        Returns:
+            6 digit PIN code for use with pairing
+        """
+        url = "https://beta.yikyak.com/api/auth/initPairing"
+        data = {
+            'userID': user_id
+        }
+        response = requests.post(url, data=data)
+        return response.json()['pin']
+
     def _login(self, country_code, phone_number, pin):
         """
         Login to YikYak to retrieve authentication token
