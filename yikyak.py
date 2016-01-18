@@ -85,8 +85,21 @@ class YikYak(object):
         response = self._request('POST', url, headers=headers, json=json)
         return response
 
-    def get_new(self, latitude, longitude):
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/all/new'
+    def _get_yaks(self, feed, latitude, longitude):
+        """
+        Internal function to retrieve Yaks from a location
+
+        Arguments:
+            feed (string): hot or new
+            latitude (float): latitude co-ordinate
+            longitude (float): longitude co-ordinate
+
+        Returns:
+            List of Yak objects from the feed
+        """
+        assert feed in ['hot', 'new']
+
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/all/' + feed
 
         headers = {
             'Referer': 'https://beta.yikyak.com/',
@@ -106,6 +119,32 @@ class YikYak(object):
         # Generate new Yak objects from the JSON
         yaks = [Yak(data) for data in response]
         return yaks
+
+    def get_new(self, latitude, longitude):
+        """
+        Retrieve new Yaks from a location
+
+        Arguments:
+            latitude (float): location latitude
+            longitude (float): location longitude
+
+        Returns:
+            List of Yak objects
+        """
+        return self._get_yaks('new', latitude, longitude)
+
+    def get_hot(self, latitude, longitude):
+        """
+        Retrieve hot Yaks from a location
+
+        Arguments:
+            latitude (float): location latitude
+            longitude (float): location longitude
+
+        Returns:
+            List of Yak objects
+        """
+        return self._get_yaks('hot', latitude, longitude)
 
     def _vote(self, action, yak):
         """
