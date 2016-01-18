@@ -11,7 +11,7 @@ class TestSuite(unittest.TestCase):
         """
         Assert _login() makes correct API call
         """
-        yakker = YikYak("", "", "")
+        yakker = YikYak()
 
         # Mock response
         mock_resp = mock.Mock()
@@ -36,7 +36,7 @@ class TestSuite(unittest.TestCase):
         """
         Assert init_pairing() makes API call to retrieve auth PIN
         """
-        yakker = YikYak("", "", "")
+        yakker = YikYak()
 
         # Mock response
         mock_resp = mock.Mock()

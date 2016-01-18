@@ -5,8 +5,8 @@ ENDPOINT = "https://beta.yikyak.com/api/proxy/v1/"
 
 
 class YikYak(object):
-    def __init__(self, country_code, phone_number, pin):
-        self.auth_token = self._login(country_code, phone_number, pin)
+    def __init__(self):
+        self.auth_token = None
 
     def init_pairing(self, user_id):
         """
@@ -54,4 +54,4 @@ class YikYak(object):
 
 
 if __name__ == "__main__":
-    yakker = YikYak("GBR", settings.PHONE_NUMBER, "258928")
+    yakker = YikYak()
