@@ -100,6 +100,32 @@ class YikYak(object):
         yaks = [Yak(data) for data in response]
         return yaks
 
+    def upvote(self, yak):
+        """
+        Upvote a Yak
+
+        Arguments:
+            yak (Yak): Yak to upvote
+        """
+        # Convert / to %2F
+        yak_id = urllib.parse.quote_plus(yak.messageID)
+
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/upvote'
+        url = url.format(yak_id)
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': self.auth_token,
+        }
+
+        params = {
+            'userLat': yak.latitude,
+            'userLong': yak.longitude,
+            'myHerd': 0,
+        }
+
+        self._request('PUT', url, headers=headers, params=params)
+
 
 if __name__ == "__main__":
     yakker = YikYak()

@@ -50,6 +50,35 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with('POST', url, headers=headers, json=json)
 
+    @mock.patch('yikyak.YikYak._request')
+    def test_upvote(self, mock_request):
+        # Mock Yak
+        mock_yak = mock.Mock()
+        mock_yak.messageID = 'R/abcdef0123456789abcdef0123456'
+        mock_yak.latitude = 50.93
+        mock_yak.longitude = -1.76
+
+        # Set up YikYak
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+        yakker.upvote(mock_yak)
+
+        # Assert API call is correct
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/upvote'
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': 'auth_token',
+        }
+
+        params = {
+            'userLat': 50.93,
+            'userLong': -1.76,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('PUT', url, headers=headers, params=params)
+
 
 if __name__ == "__main__":
     unittest.main()
