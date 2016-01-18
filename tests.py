@@ -9,7 +9,7 @@ class TestSuite(unittest.TestCase):
     @mock.patch('yikyak.requests')
     def test_login(self, mock_request):
         """
-        Assert _login() makes correct API call
+        Assert pair() makes correct API call
         """
         yakker = YikYak()
 
@@ -27,7 +27,7 @@ class TestSuite(unittest.TestCase):
             'pin': "123456",
         }
 
-        token = yakker._login("GBR", "0000000000", "123456")
+        token = yakker.pair("GBR", "0000000000", "123456")
         self.assertEqual(token, "authtoken")
         mock_request.post.assert_called_with(url, headers=headers, json=json)
 

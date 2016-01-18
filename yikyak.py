@@ -25,7 +25,7 @@ class YikYak(object):
         response = requests.post(url, data=data)
         return response.json()['pin']
 
-    def _login(self, country_code, phone_number, pin):
+    def pair(self, country_code, phone_number, pin):
         """
         Login to YikYak to retrieve authentication token
 
