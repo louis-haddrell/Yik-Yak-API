@@ -2,8 +2,8 @@
 class Yak(object):
     def __init__(self, json):
         self.canDownVote = json['canDownVote']
-        self.canReport = json['canReport']
         self.canReply = json['canReply']
+        self.canReport = json['canReport']
         self.canUpVote = json['canUpVote']
         self.canVote = json['canVote']
         self.comments = json['comments']
@@ -11,8 +11,8 @@ class Yak(object):
         self.gmt = json['gmt']
         self.handle = json['handle']
         self.hidePin = json['hidePin']
-        self.liked = json['liked']
         self.latitude = json['latitude']
+        self.liked = json['liked']
         self.location = json['location']
         self.locationDisplayStyle = json['locationDisplayStyle']
         self.locationName = json['locationName']
