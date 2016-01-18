@@ -1,7 +1,7 @@
 import requests
 import settings
 
-ENDPOINT = "https://beta.yikyak.com/api/proxy/v1/"
+from yak import Yak
 
 
 class YikYak(object):
@@ -64,7 +64,11 @@ class YikYak(object):
             Authentication token required for further YikYak access
         """
         url = "https://beta.yikyak.com/api/auth/pair"
-        headers = {'Referer': 'https://beta.yikyak.com/'}
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/'
+        }
+
         json = {
             'countryCode': country_code,
             'phoneNumber': phone_number,
@@ -74,7 +78,34 @@ class YikYak(object):
         response = self._request('POST', url, headers=headers, json=json)
         return response
 
+    def get_new(self, latitude, longitude):
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/all/new'
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': self.auth_token,
+        }
+
+        params = {
+            'userLat': latitude,
+            'userLong': longitude,
+            'lat': latitude,
+            'long': longitude,
+            'myHerd': 0,
+        }
+
+        response = self._request('GET', url, params=params, headers=headers)
+
+        # Generate new Yak objects from the JSON
+        yaks = [Yak(data) for data in response]
+        return yaks
+
 
 if __name__ == "__main__":
     yakker = YikYak()
-    yakker.auth_token = settings.AUTH_TOKEN
+    yakker.login_id(settings.COUNTRY, settings.PHONE_NUMBER, settings.USER_ID)
+    new_yaks = yakker.get_new(settings.LATITUDE, settings.LONGITUDE)
+
+    for yak in new_yaks:
+        print(yak.message.encode('ascii', 'ignore').decode())
+        print()
