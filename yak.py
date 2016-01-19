@@ -65,8 +65,8 @@ class Yak(WebObject):
         }
 
         params = {
-            'userLat': self.latitude,
-            'userLong': self.longitude,
+            'userLat': 0,
+            'userLong': 0,
             'myHerd': 0,
         }
 
@@ -90,8 +90,8 @@ class Yak(WebObject):
         }
 
         params = {
-            'userLat': self.latitude,
-            'userLong': self.longitude,
+            'userLat': 0,
+            'userLong': 0,
             'myHerd': 0,
         }
 

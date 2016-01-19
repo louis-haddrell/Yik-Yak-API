@@ -130,8 +130,8 @@ class TestSuite(unittest.TestCase):
         }
 
         params = {
-            'userLat': 50.93,
-            'userLong': -1.76,
+            'userLat': 0,
+            'userLong': 0,
             'myHerd': 0,
         }
 
@@ -151,8 +151,8 @@ class TestSuite(unittest.TestCase):
         }
 
         params = {
-            'userLat': 50.93,
-            'userLong': -1.76,
+            'userLat': 0,
+            'userLong': 0,
             'myHerd': 0,
         }
 
