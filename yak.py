@@ -33,3 +33,19 @@ class Yak(object):
         self.image_width = json.get('imageWidth', 0)
         self.thumbnail_url = json.get('thumbNailUrl', None)
         self.url = json.get('url', None)
+
+
+class Comment(object):
+    def __init__(self, json):
+        self.back_id = json['backID']
+        self.comment = json['comment']
+        self.comment_id = json['commentID']
+        self.delivery_id = json['deliveryID']
+        self.gmt = json['gmt']
+        self.is_deleted = json['isDeleted']
+        self.liked = json['liked']
+        self.message_id = json['messageID']
+        self.number_of_likes = json['numberOfLikes']
+        self.overlay_id = json['overlayID']
+        self.poster_id = json['posterID']
+        self.time = json['time']
