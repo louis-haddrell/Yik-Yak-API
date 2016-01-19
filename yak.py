@@ -41,6 +41,13 @@ class Yak(WebObject):
         self.thumbnail_url = json.get('thumbNailUrl', None)
         self.url = json.get('url', None)
 
+    @property
+    def message_url(self):
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/'
+        # Convert / to %2F
+        urlsafe_id = urllib.parse.quote_plus(self.message_id)
+        return url.format(urlsafe_id)
+
     def _vote(self, action):
         """
         Internal function to upvote or downvote this Yak
@@ -50,11 +57,7 @@ class Yak(WebObject):
         """
         assert action in ['downvote', 'upvote']
 
-        # Convert / to %2F
-        urlsafe_id = urllib.parse.quote_plus(self.message_id)
-
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/{}'
-        url = url.format(urlsafe_id, action)
+        url = self.message_url + action
 
         headers = {
             'Referer': 'https://beta.yikyak.com/',
@@ -79,12 +82,7 @@ class Yak(WebObject):
 
     def refresh(self):
         """Refresh the Yak information"""
-
-        # Convert / to %2F
-        urlsafe_id = urllib.parse.quote_plus(self.message_id)
-
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/'
-        url = url.format(urlsafe_id)
+        url = self.message_url
 
         headers = {
             'Referer': 'https://beta.yikyak.com/',
