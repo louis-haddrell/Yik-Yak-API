@@ -138,12 +138,14 @@ Authentication cookie split into individual characters
 **Method: ** `GET`
 
 **Request Headers**
+
 |Key|Type|Value
 |---|---|---
 |`Referer`|string|`https://beta.yikyak.com/`
 |`x-access-token`|string|Authentication token from pairing
 
 **Request Parameters**
+
 |Key|Type|Value
 |---|---|---
 |`userLat`|float|User's latitude
@@ -162,12 +164,14 @@ Returns 200 Yak objects
 **Method:** `PUT`
 
 **Request Headers**
+
 |Key|Type|Value
 |---|---|---
 |`Referer`|string|`https://beta.yikyak.com/`
 |`x-access-token`|string|Authentication token from pairing
 
 **Request Parameters**
+
 |Key|Value
 |---|---
 |`userLat`|float
