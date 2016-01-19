@@ -1,8 +1,10 @@
 
 import urllib.parse
 
+from web import WebObject
 
-class Yak(object):
+
+class Yak(WebObject):
     def __init__(self, auth_token, json):
         self.auth_token = auth_token
 
@@ -38,15 +40,6 @@ class Yak(object):
         self.image_width = json.get('imageWidth', 0)
         self.thumbnail_url = json.get('thumbNailUrl', None)
         self.url = json.get('url', None)
-
-    def _request(self, method, url, **kwargs):
-        response = requests.request(method, url, **kwargs)
-        response.raise_for_status()
-
-        try:
-            return response.json()
-        except JSONDecodeError:
-            return {}
 
     def _vote(self, action):
         """

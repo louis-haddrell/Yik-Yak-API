@@ -2,24 +2,11 @@ import requests
 import settings
 import urllib.parse
 
-from json.decoder import JSONDecodeError
-
+from web import WebObject
 from yak import Yak
 
 
-class YikYak(object):
-    def __init__(self):
-        self.auth_token = None
-
-    def _request(self, method, url, **kwargs):
-        response = requests.request(method, url, **kwargs)
-        response.raise_for_status()
-
-        try:
-            return response.json()
-        except JSONDecodeError:
-            return {}
-
+class YikYak(WebObject):
     def login(self, country_code, phone_number, pin):
         """
         Login to YikYak and get our auth token
