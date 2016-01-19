@@ -77,6 +77,28 @@ class Yak(WebObject):
         """Upvote this Yak"""
         self._vote('upvote')
 
+    def refresh(self):
+        """Refresh the Yak information"""
+
+        # Convert / to %2F
+        urlsafe_id = urllib.parse.quote_plus(self.message_id)
+
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/'
+        url = url.format(urlsafe_id)
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': self.auth_token,
+        }
+
+        params = {
+            'userLat': self.latitude,
+            'userLong': self.longitude,
+            'myHerd': 0,
+        }
+
+        data = self._request('GET', url, headers=headers, params=params)
+        self = self.__init__(self.auth_token, data)
 
 
 class Comment(object):
