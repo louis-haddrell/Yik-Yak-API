@@ -1,3 +1,6 @@
 *.pyc
 settings.py
+
 .coverage
+cover/
+test.bat
