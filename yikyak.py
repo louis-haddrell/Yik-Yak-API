@@ -1,6 +1,4 @@
-import requests
 import settings
-import urllib.parse
 
 from web import WebObject
 from yak import Yak
@@ -132,13 +130,3 @@ class YikYak(WebObject):
             List of Yak objects
         """
         return self._get_yaks('hot', latitude, longitude)
-
-
-if __name__ == "__main__":
-    yakker = YikYak()
-    yakker.login_id(settings.COUNTRY, settings.PHONE_NUMBER, settings.USER_ID)
-    new_yaks = yakker.get_new(settings.LATITUDE, settings.LONGITUDE)
-
-    for yak in new_yaks:
-        print(yak.message.encode('ascii', 'ignore').decode())
-        print()

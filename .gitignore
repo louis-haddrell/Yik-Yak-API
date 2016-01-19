@@ -1,5 +1,6 @@
 *.pyc
 settings.py
+sandbox.py
 
 .coverage
 cover/
