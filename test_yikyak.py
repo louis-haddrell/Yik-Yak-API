@@ -106,7 +106,7 @@ class TestSuite(unittest.TestCase):
             'myHerd': 0,
         }
 
-        mock_request.assert_called_with('PUT', url, headers=headers, params=params)        
+        mock_request.assert_called_with('PUT', url, headers=headers, params=params)
 
     @mock.patch('yikyak.requests')
     def test_request_invalid_json(self, mock_request):
@@ -123,6 +123,42 @@ class TestSuite(unittest.TestCase):
         yakker = YikYak()
         response = yakker._request('', '')
         self.assertEqual(response, {})
+
+    @mock.patch('yikyak.YikYak.pair')
+    def test_login(self, mock_pair):
+        """
+        Assert .login() grabs the auth token
+
+        Fail if the token is not assigned to YikYak.auth_token
+        """
+        mock_pair.return_value = "auth_token"
+
+        yakker = YikYak()
+        yakker.login("GBR", "1234567890", "123456")
+
+        self.assertEqual(yakker.auth_token, "auth_token")
+        mock_pair.assert_called_with("GBR", "1234567890", "123456")
+
+    @mock.patch('yikyak.YikYak._get_yaks')
+    def test_get_hot(self, mock_get):
+        yakker = YikYak()
+        yakker.get_hot(1, 2)
+        mock_get.assert_called_with('hot', 1, 2)
+
+    @mock.patch('yikyak.YikYak._get_yaks')
+    def test_get_new(self, mock_get):
+        yakker = YikYak()
+        yakker.get_new(1, 2)
+        mock_get.assert_called_with('new', 1, 2)
+
+    def test_get_yaks_invalid(self):
+        """
+        Assert YikYak._get_yaks() throws an AssertionError if we attempt to
+        retireve from a feed that is not 'hot' or 'new'
+        """
+        yakker = YikYak()
+        with self.assertRaises(AssertionError):
+            yakker._get_yaks('abcd', 1, 2)
 
 
 if __name__ == "__main__":
