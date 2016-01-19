@@ -117,7 +117,7 @@ class YikYak(object):
         response = self._request('GET', url, params=params, headers=headers)
 
         # Generate new Yak objects from the JSON
-        yaks = [Yak(data) for data in response]
+        yaks = [Yak(self.auth_token, data) for data in response]
         return yaks
 
     def get_new(self, latitude, longitude):
@@ -145,53 +145,6 @@ class YikYak(object):
             List of Yak objects
         """
         return self._get_yaks('hot', latitude, longitude)
-
-    def _vote(self, action, yak):
-        """
-        Internal function to upvote / downvote a Yak
-
-        Arguments:
-            action (string): downvote / upvote
-            yak (Yak): Yak to vote on
-        """
-        assert action in ['downvote', 'upvote']
-
-        # Convert / to %2F
-        yak_id = urllib.parse.quote_plus(yak.messageID)
-
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/{}'
-        url = url.format(yak_id, action)
-
-        headers = {
-            'Referer': 'https://beta.yikyak.com/',
-            'x-access-token': self.auth_token,
-        }
-
-        params = {
-            'userLat': yak.latitude,
-            'userLong': yak.longitude,
-            'myHerd': 0,
-        }
-
-        self._request('PUT', url, headers=headers, params=params)
-
-    def downvote(self, yak):
-        """
-        Downvote a Yak
-
-        Arguments:
-            yak (Yak): Yak to downvote
-        """
-        self._vote('downvote', yak)
-
-    def upvote(self, yak):
-        """
-        Upvote a Yak
-
-        Arguments:
-            yak (Yak): Yak to upvote
-        """
-        self._vote('upvote', yak)
 
 
 if __name__ == "__main__":

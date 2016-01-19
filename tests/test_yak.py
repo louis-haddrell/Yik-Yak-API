@@ -44,7 +44,11 @@ class TestSuite(unittest.TestCase):
         self.img_data.update(self.yak_data)
 
     def test_yak_construction(self):
-        yak = Yak(self.yak_data)
+        yak = Yak('auth_token', self.yak_data)
+
+        self.assertEqual(yak.auth_token, 'auth_token')
+
+        # Check retrieval of JSON data
         self.assertEqual(yak.can_downvote, self.yak_data['canDownVote'])
         self.assertEqual(yak.can_reply, self.yak_data['canReply'])
         self.assertEqual(yak.can_report, self.yak_data['canReport'])
@@ -79,7 +83,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yak.url, None)
 
     def test_image_yak_construction(self):
-        yak = Yak(self.img_data)
+        yak = Yak('auth_token', self.img_data)
 
         self.assertEqual(yak.can_downvote, self.img_data['canDownVote'])
         self.assertEqual(yak.can_reply, self.img_data['canReply'])
@@ -111,6 +115,59 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yak.image_width, self.img_data['imageWidth'])
         self.assertEqual(yak.thumbnail_url, self.img_data['thumbNailUrl'])
         self.assertEqual(yak.url, self.img_data['url'])
+
+    @mock.patch('yak.Yak._request')
+    def test_upvote(self, mock_request):
+        yak = Yak('auth_token', self.yak_data)
+        yak.upvote()
+
+        # Assert API call is correct
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/upvote'
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': 'auth_token',
+        }
+
+        params = {
+            'userLat': 50.93,
+            'userLong': -1.76,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('PUT', url, headers=headers, params=params)
+
+    @mock.patch('yak.Yak._request')
+    def test_downvote(self, mock_request):
+        yak = Yak('auth_token', self.yak_data)
+        yak.downvote()
+
+        # Assert API call is correct
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/downvote'
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': 'auth_token',
+        }
+
+        params = {
+            'userLat': 50.93,
+            'userLong': -1.76,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('PUT', url, headers=headers, params=params)
+
+    def test_invalid_vote(self):
+        """
+        Assert that Yak._vote() throws an exception with invalid vote types
+
+        ._vote() should only accept 'upvote' and 'downvote'
+        """
+        yak = Yak('auth_token', self.yak_data)
+
+        with self.assertRaises(AssertionError):
+            yak._vote('sidevote')
 
 
 if __name__ == '__main__':

@@ -1,6 +1,11 @@
 
+import urllib.parse
+
+
 class Yak(object):
-    def __init__(self, json):
+    def __init__(self, auth_token, json):
+        self.auth_token = auth_token
+
         self.can_downvote = json['canDownVote']
         self.can_reply = json['canReply']
         self.can_report = json['canReport']
@@ -33,6 +38,52 @@ class Yak(object):
         self.image_width = json.get('imageWidth', 0)
         self.thumbnail_url = json.get('thumbNailUrl', None)
         self.url = json.get('url', None)
+
+    def _request(self, method, url, **kwargs):
+        response = requests.request(method, url, **kwargs)
+        response.raise_for_status()
+
+        try:
+            return response.json()
+        except JSONDecodeError:
+            return {}
+
+    def _vote(self, action):
+        """
+        Internal function to upvote or downvote this Yak
+
+        Arguments:
+            action (string): downvote / upvote
+        """
+        assert action in ['downvote', 'upvote']
+
+        # Convert / to %2F
+        urlsafe_id = urllib.parse.quote_plus(self.message_id)
+
+        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/{}'
+        url = url.format(urlsafe_id, action)
+
+        headers = {
+            'Referer': 'https://beta.yikyak.com/',
+            'x-access-token': self.auth_token,
+        }
+
+        params = {
+            'userLat': self.latitude,
+            'userLong': self.longitude,
+            'myHerd': 0,
+        }
+
+        self._request('PUT', url, headers=headers, params=params)
+
+    def downvote(self):
+        """Downvote this Yak"""
+        self._vote('downvote')
+
+    def upvote(self):
+        """Upvote this Yak"""
+        self._vote('upvote')
+
 
 
 class Comment(object):
