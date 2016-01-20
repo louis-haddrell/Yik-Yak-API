@@ -38,7 +38,7 @@ class YikYak(WebObject):
         Returns:
             6 digit PIN code for use with pairing
         """
-        url = "https://beta.yikyak.com/api/auth/initPairing"
+        url = "https://yikyak.com/api/auth/initPairing"
         data = {'userID': user_id}
         response = self._request('POST', url, data=data)
         return response['pin']
@@ -55,10 +55,10 @@ class YikYak(WebObject):
         Returns:
             Authentication token required for further YikYak access
         """
-        url = "https://beta.yikyak.com/api/auth/pair"
+        url = "https://yikyak.com/api/auth/pair"
 
         headers = {
-            'Referer': 'https://beta.yikyak.com/'
+            'Referer': 'https://yikyak.com/'
         }
 
         json = {
@@ -84,10 +84,10 @@ class YikYak(WebObject):
         """
         assert feed in ['hot', 'new']
 
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/all/' + feed
+        url = 'https://yikyak.com/api/proxy/v1/messages/all/' + feed
 
         headers = {
-            'Referer': 'https://beta.yikyak.com/',
+            'Referer': 'https://yikyak.com/',
             'x-access-token': self.auth_token,
         }
 

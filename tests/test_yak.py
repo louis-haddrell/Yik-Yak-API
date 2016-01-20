@@ -122,10 +122,10 @@ class TestSuite(unittest.TestCase):
         yak.upvote()
 
         # Assert API call is correct
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/upvote'
+        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/upvote'
 
         headers = {
-            'Referer': 'https://beta.yikyak.com/',
+            'Referer': 'https://yikyak.com/',
             'x-access-token': 'auth_token',
         }
 
@@ -143,10 +143,10 @@ class TestSuite(unittest.TestCase):
         yak.downvote()
 
         # Assert API call is correct
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/downvote'
+        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/downvote'
 
         headers = {
-            'Referer': 'https://beta.yikyak.com/',
+            'Referer': 'https://yikyak.com/',
             'x-access-token': 'auth_token',
         }
 

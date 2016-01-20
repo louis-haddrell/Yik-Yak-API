@@ -24,7 +24,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(pin, '123456')
 
         # Assert _request() call is correct
-        url = "https://beta.yikyak.com/api/auth/initPairing"
+        url = "https://yikyak.com/api/auth/initPairing"
         data = {'userID': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345'}
         mock_request.assert_called_with('POST', url, data=data)
 
@@ -40,8 +40,8 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(token, 'auth_token')
 
         # Assert API call is correct
-        url = 'https://beta.yikyak.com/api/auth/pair'
-        headers = {'Referer': 'https://beta.yikyak.com/'}
+        url = 'https://yikyak.com/api/auth/pair'
+        headers = {'Referer': 'https://yikyak.com/'}
         json = {
             'countryCode': 'GBR',
             'phoneNumber': '1234567890',

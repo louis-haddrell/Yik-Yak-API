@@ -43,7 +43,7 @@ class Yak(WebObject):
 
     @property
     def message_url(self):
-        url = 'https://beta.yikyak.com/api/proxy/v1/messages/{}/'
+        url = 'https://yikyak.com/api/proxy/v1/messages/{}/'
         # Convert / to %2F
         urlsafe_id = urllib.parse.quote_plus(self.message_id)
         return url.format(urlsafe_id)
@@ -60,7 +60,7 @@ class Yak(WebObject):
         url = self.message_url + action
 
         headers = {
-            'Referer': 'https://beta.yikyak.com/',
+            'Referer': 'https://yikyak.com/',
             'x-access-token': self.auth_token,
         }
 
@@ -85,7 +85,7 @@ class Yak(WebObject):
         url = self.message_url
 
         headers = {
-            'Referer': 'https://beta.yikyak.com/',
+            'Referer': 'https://yikyak.com/',
             'x-access-token': self.auth_token,
         }
 
