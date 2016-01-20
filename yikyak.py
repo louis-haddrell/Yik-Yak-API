@@ -57,17 +57,13 @@ class YikYak(WebObject):
         """
         url = "https://yikyak.com/api/auth/pair"
 
-        headers = {
-            'Referer': 'https://yikyak.com/'
-        }
-
         json = {
             'countryCode': country_code,
             'phoneNumber': phone_number,
             'pin': pin,
         }
 
-        response = self._request('POST', url, headers=headers, json=json)
+        response = self._request('POST', url, json=json)
         return response
 
     def _get_yaks(self, feed, latitude, longitude):
@@ -85,11 +81,6 @@ class YikYak(WebObject):
         assert feed in ['hot', 'new']
 
         url = 'https://yikyak.com/api/proxy/v1/messages/all/' + feed
-
-        headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': self.auth_token,
-        }
 
         params = {
             'userLat': latitude,
@@ -141,12 +132,6 @@ class YikYak(WebObject):
             longitude (float): location longitude
         """
         url = "https://yikyak.com/api/proxy/v1/messages"
-
-        headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': self.auth_token,
-        }
-
         params = {
             'lat': latitude,
             'long': longitude,
@@ -154,10 +139,9 @@ class YikYak(WebObject):
             'userLat': 0,
             'userLong': 0,
         }
-
         json = {
             'message': message,
         }
 
-        data = self._request('POST', url, headers=headers, params=params, json=json)
+        data = self._request('POST', url, params=params, json=json)
         return Yak(self.auth_token, data)

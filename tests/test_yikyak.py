@@ -41,14 +41,13 @@ class TestSuite(unittest.TestCase):
 
         # Assert API call is correct
         url = 'https://yikyak.com/api/auth/pair'
-        headers = {'Referer': 'https://yikyak.com/'}
         json = {
             'countryCode': 'GBR',
             'phoneNumber': '1234567890',
             'pin': '123456',
         }
 
-        mock_request.assert_called_with('POST', url, headers=headers, json=json)
+        mock_request.assert_called_with('POST', url, json=json)
 
     @mock.patch('yikyak.YikYak.pair')
     def test_login(self, mock_pair):
@@ -96,10 +95,6 @@ class TestSuite(unittest.TestCase):
 
         # Expected request
         url = "https://yikyak.com/api/proxy/v1/messages"
-        headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': 'auth_token',
-        }
         params = {
             'lat': 50.93,
             'long': -1.76,
@@ -113,9 +108,7 @@ class TestSuite(unittest.TestCase):
 
         yak = yakker.compose_yak("Hello World", 50.93, -1.76)
         self.assertTrue(isinstance(yak, Yak))
-        mock_request.assert_called_with(
-            'POST', url, headers=headers, params=params, json=json
-        )
+        mock_request.assert_called_with('POST', url, params=params, json=json)
 
 
 if __name__ == "__main__":

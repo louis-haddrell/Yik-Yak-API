@@ -123,19 +123,12 @@ class TestSuite(unittest.TestCase):
 
         # Assert API call is correct
         url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/upvote'
-
-        headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': 'auth_token',
-        }
-
         params = {
             'userLat': 0,
             'userLong': 0,
             'myHerd': 0,
         }
-
-        mock_request.assert_called_with('PUT', url, headers=headers, params=params)
+        mock_request.assert_called_with('PUT', url, params=params)
 
     @mock.patch('yak.Yak._request')
     def test_downvote(self, mock_request):
@@ -145,18 +138,13 @@ class TestSuite(unittest.TestCase):
         # Assert API call is correct
         url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/downvote'
 
-        headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': 'auth_token',
-        }
-
         params = {
             'userLat': 0,
             'userLong': 0,
             'myHerd': 0,
         }
 
-        mock_request.assert_called_with('PUT', url, headers=headers, params=params)
+        mock_request.assert_called_with('PUT', url, params=params)
 
     def test_invalid_vote(self):
         """
@@ -179,17 +167,14 @@ class TestSuite(unittest.TestCase):
 
         # Expected request
         url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/'
-        headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': 'auth_token',
-        }
+
         params = {
             'userLat': 0,
             'userLong': 0,
             'myHerd': 0,
         }
 
-        mock_request.assert_called_with('DELETE', url, headers=headers, params=params)
+        mock_request.assert_called_with('DELETE', url, params=params)
 
 
 if __name__ == '__main__':
