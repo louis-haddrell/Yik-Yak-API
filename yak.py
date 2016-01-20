@@ -8,31 +8,31 @@ class Yak(WebObject):
     def __init__(self, auth_token, json):
         self.auth_token = auth_token
 
-        self.can_downvote = json['canDownVote']
-        self.can_reply = json['canReply']
-        self.can_report = json['canReport']
-        self.can_upvote = json['canUpVote']
-        self.can_vote = json['canVote']
-        self.comments = json['comments']
-        self.delivery_id = json['deliveryID']
-        self.gmt = json['gmt']
-        self.handle = json['handle']
-        self.hide_pin = json['hidePin']
-        self.latitude = json['latitude']
-        self.liked = json['liked']
-        self.location = json['location']
-        self.location_display_style = json['locationDisplayStyle']
-        self.location_name = json['locationName']
-        self.longitude = json['longitude']
-        self.message = json['message']
-        self.message_id = json['messageID']
-        self.number_of_likes = json['numberOfLikes']
-        self.poster_id = json['posterID']
-        self.read_only = json['readOnly']
-        self.reyaked = json['reyaked']
-        self.score = json['score']
-        self.time = json['time']
-        self.type = json['type']
+        self.can_downvote = json.get('canDownVote', False)
+        self.can_reply = json.get('canReply', False)
+        self.can_report = json.get('canReport', 0)
+        self.can_upvote = json.get('canUpVote', False)
+        self.can_vote = json.get('canVote', False)
+        self.comments = json.get('comments', 0)
+        self.delivery_id = json.get('deliveryID', 0)
+        self.gmt = json.get('gmt', 0)
+        self.handle = json.get('handle', None)
+        self.hide_pin = json.get('hidePin', 0)
+        self.latitude = json.get('latitude', 0.0)
+        self.liked = json.get('liked', 0)
+        self.location = json.get('location', {})
+        self.location_display_style = json.get('locationDisplayStyle', 0)
+        self.location_name = json.get('locationName', "")
+        self.longitude = json.get('longitude', 0.0)
+        self.message = json.get('message', "")
+        self.message_id = json.get('messageID', "")
+        self.number_of_likes = json.get('numberOfLikes', 0)
+        self.poster_id = json.get('posterID', "")
+        self.read_only = json.get('readOnly', 0)
+        self.reyaked = json.get('reyaked', 0)
+        self.score = json.get('score', 0)
+        self.time = json.get('time', "")
+        self.type = json.get('type', 0)
 
         # Image Yaks
         self.expand_in_feed = json.get('expandInFeed', 0)
