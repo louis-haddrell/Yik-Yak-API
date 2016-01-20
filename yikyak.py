@@ -159,4 +159,5 @@ class YikYak(WebObject):
             'message': message,
         }
 
-        self._request('POST', url, headers=headers, params=params, json=json)
+        data = self._request('POST', url, headers=headers, params=params, json=json)
+        return Yak(self.auth_token, data)

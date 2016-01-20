@@ -88,6 +88,9 @@ class TestSuite(unittest.TestCase):
 
     @mock.patch('yikyak.YikYak._request')
     def test_compose_yak(self, mock_request):
+        """
+        Assert YikYak.compose_yak() makes the correct API call
+        """
         yakker = YikYak()
         yakker.auth_token = 'auth_token'
 
@@ -108,7 +111,8 @@ class TestSuite(unittest.TestCase):
             'message': 'Hello World',
         }
 
-        yakker.compose_yak("Hello World", 50.93, -1.76)
+        yak = yakker.compose_yak("Hello World", 50.93, -1.76)
+        self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with(
             'POST', url, headers=headers, params=params, json=json
         )
