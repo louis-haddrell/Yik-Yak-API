@@ -98,6 +98,21 @@ class Yak(WebObject):
         data = self._request('GET', url, headers=headers, params=params)
         self = self.__init__(self.auth_token, data)
 
+    def delete(self):
+        """Delete this Yak"""
+        url = self.message_url
+
+        headers = {
+            'Referer': 'https://yikyak.com/',
+            'x-access-token': self.auth_token,
+        }
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+        self._request('DELETE', url, headers=headers, params=params)
+
 
 class Comment(object):
     def __init__(self, json):

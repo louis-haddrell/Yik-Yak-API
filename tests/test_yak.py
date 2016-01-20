@@ -169,6 +169,28 @@ class TestSuite(unittest.TestCase):
         with self.assertRaises(AssertionError):
             yak._vote('sidevote')
 
+    @mock.patch('yak.Yak._request')
+    def test_delete(self, mock_request):
+        """
+        Assert that Yak.delete() makes the correct API call
+        """
+        yak = Yak('auth_token', self.yak_data)
+        yak.delete()
+
+        # Expected request
+        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcdef0123456789abcdef0123456/'
+        headers = {
+            'Referer': 'https://yikyak.com/',
+            'x-access-token': 'auth_token',
+        }
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('DELETE', url, headers=headers, params=params)
+
 
 if __name__ == '__main__':
     unittest.main()
