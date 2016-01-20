@@ -22,7 +22,6 @@ class TestSuite(unittest.TestCase):
         web._request(method, url)
         mock_request.assert_called_with(method, url, headers=headers)
 
-
     @mock.patch('web.requests')
     def test_request_invalid_json(self, mock_request):
         """
@@ -38,3 +37,16 @@ class TestSuite(unittest.TestCase):
         web = WebObject()
         response = web._request('', '')
         self.assertEqual(response, {})
+
+    @mock.patch('web.WebObject._request')
+    def test_refresh_token(self, mock_request):
+        mock_request.return_value = 'new_token'
+
+        web = WebObject()
+        web.auth_token = 'old_token'
+        web.refresh_token()
+
+        self.assertEqual(web.auth_token, 'new_token')
+
+        url = 'https://yikyak.com/api/auth/token/refresh'
+        mock_request.assert_called_with('POST', url)

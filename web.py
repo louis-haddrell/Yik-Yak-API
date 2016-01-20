@@ -43,3 +43,10 @@ class WebObject(object):
             return response.json()
         except JSONDecodeError:
             return {}
+
+    def refresh_token(self):
+        """
+        Refresh the auth token
+        """
+        url = 'https://yikyak.com/api/auth/token/refresh'
+        self.auth_token = self._request('POST', url)
