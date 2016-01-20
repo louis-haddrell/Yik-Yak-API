@@ -86,6 +86,33 @@ class TestSuite(unittest.TestCase):
         with self.assertRaises(AssertionError):
             yakker._get_yaks('abcd', 1, 2)
 
+    @mock.patch('yikyak.YikYak._request')
+    def test_compose_yak(self, mock_request):
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+
+        # Expected request
+        url = "https://yikyak.com/api/proxy/v1/messages"
+        headers = {
+            'Referer': 'https://yikyak.com/',
+            'x-access-token': 'auth_token',
+        }
+        params = {
+            'lat': 50.93,
+            'long': -1.76,
+            'myHerd': 0,
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'message': 'Hello World',
+        }
+
+        yakker.compose_yak("Hello World", 50.93, -1.76)
+        mock_request.assert_called_with(
+            'POST', url, headers=headers, params=params, json=json
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

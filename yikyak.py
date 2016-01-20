@@ -130,3 +130,33 @@ class YikYak(WebObject):
             List of Yak objects
         """
         return self._get_yaks('hot', latitude, longitude)
+
+    def compose_yak(self, message, latitude, longitude):
+        """
+        Compose a new Yak at a co-ordinate
+
+        Arguments:
+            message (string): contents of Yak
+            latitude (float): location latitude
+            longitude (float): location longitude
+        """
+        url = "https://yikyak.com/api/proxy/v1/messages"
+
+        headers = {
+            'Referer': 'https://yikyak.com/',
+            'x-access-token': self.auth_token,
+        }
+
+        params = {
+            'lat': latitude,
+            'long': longitude,
+            'myHerd': 0,
+            'userLat': 0,
+            'userLong': 0,
+        }
+
+        json = {
+            'message': message,
+        }
+
+        self._request('POST', url, headers=headers, params=params, json=json)
