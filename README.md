@@ -5,7 +5,6 @@ The API is rate limited to 30 requests per 60 seconds. Breaching this limit will
 
 ##Objects
 
-
 ###Yak
 JSON object representing a Yak (known as messages in the API)
 
@@ -162,7 +161,6 @@ Once we have retrieved the authentication token, we can interact with the API. F
 }
 ```
 
-
 ###New / Hot Yak Feed
 `GET https://yikyak.com/api/proxy/v1/messages/all/new`  
 `GET https://yikyak.com/api/proxy/v1/messages/all/hot`  
@@ -181,7 +179,6 @@ userLat=0
 userLong=0
 lat=<latitude>
 long=<longitude>
-myHerd=0
 ```
 
 `userLat` and `userLong` do not appear to be required. `lat` and `long` is the co-ordinates to retrieve Yaks from.
@@ -189,19 +186,44 @@ myHerd=0
 **Response**  
 Returns up to 200(?) Yak objects
 
+###Compose a Yak
+`POST https://yikyak.com/api/proxy/v1/messages`
+
+**Request Headers**
+```
+{
+    'Referer': 'https://yikyak.com/',
+    'x-access-token': <auth_token>,
+}
+```
+
+**Request Parameters**
+```
+lat=<latitude>
+long=<longitude>
+userLat=0
+userLong=0
+```
+
+**Request Body** (JSON)
+```
+{
+    'message': <text to post>,
+}
+```
+
 ###Yak Details
 `GET https://yikyak.com/api/proxy/v1/messages/<yak_id>`
 
 > **Note**
-> The `/` in the Yak's ID must be made URL-safe (i.e. converted to `%2F`)
-> `R/xxxxxxxxxxxxxxxxxxxxxxxxxxxxx` → `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+> The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
+> `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
 **Request Query String**  
 These values must be sent, but appear to have no effect.  
 ```
 userLat=0.0
 userLong=0.0
-myHerd=0
 ```
 
 **Request Headers**  
@@ -216,17 +238,20 @@ myHerd=0
 Returns a JSON Yak object (see above)
 
 
-###Upvoting / Downvoting a Yak
+###Voting on a Yak
 
 `PUT https://yikyak.com/api/proxy/v1/messages/<yak_id>/upvote`  
 `PUT https://yikyak.com/api/proxy/v1/messages/<yak_id>/downvote`  
+
+> **Note**
+> The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
+> `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
 **Request Query String**  
 These values must be sent, but appear to have no effect.  
 ```
 userLat=0.0
 userLong=0.0
-myHerd=0
 ```
 
 **Request Headers**  
@@ -239,3 +264,60 @@ myHerd=0
 
 **Response**  
 JSON parse fails on the response. Probably a malformed Yak object.
+
+###Delete a Yak
+`DELETE https://yikyak.com/api/proxy/v1/messages/<yak_id>`
+
+> **Note**
+> The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
+> `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+**Request Query String**  
+These values must be sent, but appear to have no effect.  
+```
+userLat=0.0
+userLong=0.0
+```
+
+**Request Headers**  
+```
+{
+    'Referer': 'https://yikyak.com/',
+    'x-access-token': <auth_token>,
+}
+```
+
+###Report a Yak
+`PUT https://yikyak.com/api/proxy/v1/messages/<yak_id>/report`
+
+> **Note**
+> The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
+> `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+**Request Query String**  
+These values must be sent, but appear to have no effect.  
+```
+userLat=0.0
+userLong=0.0
+```
+
+**Request Body**
+```
+{
+    "block": <bool>,
+    "reason": <string>,
+}
+```
+
+Selecting to block the poster of a Yak will prevent you from ever seeing their Yaks and is irreversible. Not recommended.
+
+Reason must be one of the following: `Offensive`, `Other`, `Spam`, `Targeting`
+
+
+**Request Headers**  
+```
+{
+    'Referer': 'https://yikyak.com/',
+    'x-access-token': <auth_token>,
+}
+```
