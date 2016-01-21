@@ -87,7 +87,7 @@ class Yak(Message):
         self.url = json.get('url', None)
 
     def __str__(self):
-        return self.message.encode('ascii', 'ignore')
+        return self.message.encode('ascii', 'ignore').decode()
 
     # Comment Caching
     #
@@ -173,4 +173,4 @@ class Comment(Message):
         return url.format(message_id, comment_id)
 
     def __str__(self):
-        return self.comment.encode('ascii', 'ignore')
+        return self.comment.encode('ascii', 'ignore').decode()

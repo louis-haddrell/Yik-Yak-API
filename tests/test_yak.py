@@ -228,6 +228,12 @@ class YakTests(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
         self.assertEqual(comments, mock_request.return_value)
 
+    def test_str(self):
+        yak = Yak('auth_token', {})
+        yak.message = 'Hello'
+        yak_str = yak.__str__()
+        self.assertEqual(type(yak_str), str)
+
     # @mock.patch('yak.Yak._retrieve_comments')
     # def test_comments_list_getter_no_request(self, mock_retrieve):
     #     """
@@ -357,6 +363,12 @@ class CommentTests(unittest.TestCase):
             'myHerd': 0,
         }
         mock_request.assert_called_with('DELETE', url, params=params)
+
+    def test_str(self):
+        comment = Comment('auth_token', {})
+        comment.message = 'Hello'
+        comment_str = comment.__str__()
+        self.assertEqual(type(comment_str), str)
 
 if __name__ == '__main__':
     unittest.main()
