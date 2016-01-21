@@ -4,7 +4,50 @@ import urllib.parse
 from web import WebObject
 
 
-class Yak(WebObject):
+class Message(WebObject):
+    @property
+    def message_url(self):
+        """Make sure to implement this in subclasses"""
+        raise NotImplementedError
+
+    def _vote(self, action):
+        """
+        Internal function to upvote or downvote the message
+
+        Arguments:
+            action (string): downvote / upvote
+        """
+        assert action in ['downvote', 'upvote']
+
+        url = self.message_url + action
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+
+        self._request('PUT', url, params=params)
+
+    def downvote(self):
+        """Apply a downvote"""
+        self._vote('downvote')
+
+    def delete(self):
+        """Delete this Message"""
+        url = self.message_url
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+        self._request('DELETE', url, params=params)
+
+    def upvote(self):
+        """Apply an upvote"""
+        self._vote('upvote')
+
+
+class Yak(Message):
     def __init__(self, auth_token, json):
         self.auth_token = auth_token
 
@@ -91,32 +134,6 @@ class Yak(WebObject):
         }
         return self._request('GET', url, params=params)
 
-    def _vote(self, action):
-        """
-        Internal function to upvote or downvote this Yak
-
-        Arguments:
-            action (string): downvote / upvote
-        """
-        assert action in ['downvote', 'upvote']
-
-        url = self.message_url + action
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-            'myHerd': 0,
-        }
-
-        self._request('PUT', url, params=params)
-
-    def downvote(self):
-        """Downvote this Yak"""
-        self._vote('downvote')
-
-    def upvote(self):
-        """Upvote this Yak"""
-        self._vote('upvote')
-
     def refresh(self):
         """Refresh the Yak information"""
         url = self.message_url
@@ -129,19 +146,8 @@ class Yak(WebObject):
         data = self._request('GET', url, params=params)
         self = self.__init__(self.auth_token, data)
 
-    def delete(self):
-        """Delete this Yak"""
-        url = self.message_url
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-            'myHerd': 0,
-        }
 
-        self._request('DELETE', url, params=params)
-
-
-class Comment(WebObject):
+class Comment(Message):
     def __init__(self, auth_token, json):
         self.auth_token = auth_token
 

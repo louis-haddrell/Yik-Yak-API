@@ -62,7 +62,10 @@ class YakTests(unittest.TestCase):
         self.assertEqual(yak.latitude, self.yak_data['latitude'])
         self.assertEqual(yak.liked, self.yak_data['liked'])
         self.assertEqual(yak.location, self.yak_data['location'])
-        self.assertEqual(yak.location_display_style, self.yak_data['locationDisplayStyle'])
+        self.assertEqual(
+            yak.location_display_style,
+            self.yak_data['locationDisplayStyle']
+        )
         self.assertEqual(yak.location_name, self.yak_data['locationName'])
         self.assertEqual(yak.longitude, self.yak_data['longitude'])
         self.assertEqual(yak.message, self.yak_data['message'])
@@ -98,7 +101,10 @@ class YakTests(unittest.TestCase):
         self.assertEqual(yak.latitude, self.img_data['latitude'])
         self.assertEqual(yak.liked, self.img_data['liked'])
         self.assertEqual(yak.location, self.img_data['location'])
-        self.assertEqual(yak.location_display_style, self.img_data['locationDisplayStyle'])
+        self.assertEqual(
+            yak.location_display_style,
+            self.img_data['locationDisplayStyle']
+        )
         self.assertEqual(yak.location_name, self.img_data['locationName'])
         self.assertEqual(yak.longitude, self.img_data['longitude'])
         self.assertEqual(yak.message, self.img_data['message'])
@@ -167,13 +173,11 @@ class YakTests(unittest.TestCase):
 
         # Expected request
         url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcd/'
-
         params = {
             'userLat': 0,
             'userLong': 0,
             'myHerd': 0,
         }
-
         mock_request.assert_called_with('DELETE', url, params=params)
 
     def test_comments_list_constructor_default(self):
@@ -300,6 +304,59 @@ class CommentTests(unittest.TestCase):
         comment.comment_id = 'R/abcd'
         expected = 'https://yikyak.com/api/proxy/v1/messages/R%2F1234/comments/R%2Fabcd/'
         self.assertEqual(comment.message_url, expected)
+
+    @mock.patch('yak.Comment._request')
+    def test_upvote(self, mock_request):
+        """Assert the upvote API call is made correctly for this Comment"""
+        comment = Comment('auth_token', {})
+        comment.comment_id = 'R/abcd'
+        comment.message_id = 'R/1234'
+        comment.upvote()
+
+        # Assert API call is correct
+        url = comment.message_url + 'upvote'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+        mock_request.assert_called_with('PUT', url, params=params)
+
+    @mock.patch('yak.Comment._request')
+    def test_downvote(self, mock_request):
+        """Assert the downvote API call is made correctly for this Comment"""
+        comment = Comment('auth_token', {})
+        comment.comment_id = 'R/abcd'
+        comment.message_id = 'R/1234'
+        comment.downvote()
+
+        # Assert API call is correct
+        url = comment.message_url + 'downvote'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+        mock_request.assert_called_with('PUT', url, params=params)
+
+    @mock.patch('yak.Comment._request')
+    def test_delete(self, mock_request):
+        """
+        Assert that Comment.delete() makes the correct API call
+        """
+        comment = Comment('auth_token', {})
+        comment.comment_id = 'R/abcd'
+        comment.message_id = 'R/1234'
+        comment.delete()
+
+        # Expected request
+        url = comment.message_url
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+        mock_request.assert_called_with('DELETE', url, params=params)
 
 if __name__ == '__main__':
     unittest.main()
