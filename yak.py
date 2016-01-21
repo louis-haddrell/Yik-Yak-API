@@ -14,6 +14,8 @@ class Yak(WebObject):
         self.can_upvote = json.get('canUpVote', False)
         self.can_vote = json.get('canVote', False)
         self.comments = json.get('comments', 0)
+        self._comments_list = []
+        self.comments_list = json.get('commentsList', [])
         self.delivery_id = json.get('deliveryID', 0)
         self.gmt = json.get('gmt', 0)
         self.handle = json.get('handle', None)
@@ -41,12 +43,53 @@ class Yak(WebObject):
         self.thumbnail_url = json.get('thumbNailUrl', None)
         self.url = json.get('url', None)
 
+    def __str__(self):
+        return self.message.encode('ascii', 'ignore')
+
+    # Comment Caching
+    #
+    # Note: Checking .comments_list *may* invoke an API request
+    #
+    # Yaks retrieved from the hot / new feed know their comment count, but not
+    # the details of the comments themselves. These Yaks will require a request
+    # to download the comments.
+    #
+    # Yaks that have been accessed directly, or those which have previously
+    # downloaded comments, already know about their comments, so won't request.
+
+    @property
+    def comments_list(self):
+        # Mismatch between number of comments and downloaded comments
+        if self.comments != len(self._comments_list):
+            self.comments_list = self._retrieve_comments()
+
+        return self._comments_list
+
+    @comments_list.setter
+    def comments_list(self, json):
+        self._comments_list = [Comment(self.auth_token, data) for data in json]
+
     @property
     def message_url(self):
         url = 'https://yikyak.com/api/proxy/v1/messages/{}/'
         # Convert / to %2F
         urlsafe_id = urllib.parse.quote_plus(self.message_id)
         return url.format(urlsafe_id)
+
+    def _retrieve_comments(self):
+        """
+        Retrieve comments from this Yak
+
+        Returns:
+            JSON response from API call
+        """
+        url = self.message_url + 'comments'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+        return self._request('GET', url, params=params)
 
     def _vote(self, action):
         """
@@ -112,3 +155,6 @@ class Comment(object):
         self.overlay_id = json['overlayID']
         self.poster_id = json['posterID']
         self.time = json['time']
+
+    def __str__(self):
+        return self.comment.encode('ascii', 'ignore')

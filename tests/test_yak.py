@@ -176,6 +176,68 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with('DELETE', url, params=params)
 
+    def test_comments_list_constructor_default(self):
+        """
+        Assert a default value is provided for the comments_list if not
+        included in the data passed to the constructor
+        """
+        yak = Yak('auth_token', {})
+        self.assertEqual(yak._comments_list, [])
+
+    @mock.patch('yak.Comment')
+    def test_comments_list_setter(self, mock_comment):
+        yak = Yak('auth_token', {})
+        yak.comments_list = range(10)
+        self.assertEqual(len(yak._comments_list), 10)
+
+    @mock.patch('yak.Yak._retrieve_comments')
+    def test_comments_list_getter_no_request(self, mock_retrieve):
+        """
+        Get the comments list without making a request
+        """
+        yak = Yak('auth_token', {})
+        yak.comments = 3
+        yak._comments_list = ['a', 'b', 'c']
+
+        comments = yak.comments_list
+        self.assertEqual(comments, ['a', 'b', 'c'])
+        self.assertFalse(mock_retrieve.called)
+
+    @mock.patch('yak.Yak._request')
+    def test_retrieve_comments(self, mock_request):
+        """Assert ._retrieve_comments() makes the correct API call"""
+        yak = Yak('auth_token', {})
+        yak.message_id = 'R/abc'
+        yak._retrieve_comments()
+
+        mock_request.return_value = ['a', 'b', 'c']
+
+        # Expected request
+        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabc/comments'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'myHerd': 0,
+        }
+
+        comments = yak._retrieve_comments()
+        mock_request.assert_called_with('GET', url, params=params)
+        self.assertEqual(comments, mock_request.return_value)
+
+    # @mock.patch('yak.Yak._retrieve_comments')
+    # def test_comments_list_getter_no_request(self, mock_retrieve):
+    #     """
+    #     Get the comments list when a request is required
+    #     """
+    #     yak = Yak('auth_token', {})
+    #     yak.comments = 3
+    #     yak._comments_list = []
+
+    #     mock_retrieve.return_value = ['a', 'b', 'c']
+
+    #     comments = yak.comments_list
+    #     self.assertEqual(comments, ['a', 'b', 'c'])
+    #     self.assertTrue(mock_retrieve.called)
 
 if __name__ == '__main__':
     unittest.main()
