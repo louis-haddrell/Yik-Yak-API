@@ -132,7 +132,6 @@ class YakTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         mock_request.assert_called_with('PUT', url, params=params)
 
@@ -147,7 +146,6 @@ class YakTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
 
         mock_request.assert_called_with('PUT', url, params=params)
@@ -176,7 +174,6 @@ class YakTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         mock_request.assert_called_with('DELETE', url, params=params)
 
@@ -221,7 +218,6 @@ class YakTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
 
         comments = yak._retrieve_comments()
@@ -324,7 +320,6 @@ class CommentTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         mock_request.assert_called_with('PUT', url, params=params)
 
@@ -341,7 +336,6 @@ class CommentTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         mock_request.assert_called_with('PUT', url, params=params)
 
@@ -360,7 +354,6 @@ class CommentTests(unittest.TestCase):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         mock_request.assert_called_with('DELETE', url, params=params)
 

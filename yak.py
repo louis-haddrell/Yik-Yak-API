@@ -23,7 +23,6 @@ class Message(WebObject):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
 
         self._request('PUT', url, params=params)
@@ -38,7 +37,6 @@ class Message(WebObject):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         self._request('DELETE', url, params=params)
 
@@ -144,7 +142,6 @@ class Yak(Message):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
         return self._request('GET', url, params=params)
 
@@ -154,7 +151,6 @@ class Yak(Message):
         params = {
             'userLat': 0,
             'userLong': 0,
-            'myHerd': 0,
         }
 
         data = self._request('GET', url, params=params)
