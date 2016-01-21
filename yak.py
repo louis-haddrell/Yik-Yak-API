@@ -42,6 +42,20 @@ class Message(WebObject):
         }
         self._request('DELETE', url, params=params)
 
+    def report(self, reason, block=False):
+        reasons = ["Other", "Offensive", "Spam", "Targeting"]
+
+        url = self.message_url + "report"
+        params = {
+            'userLat': 0.0,
+            'userLong': 0.0,
+        }
+        json = {
+            'block': block,
+            'reason': reasons[reason],
+        }
+        self._request('PUT', url, params=params, json=json)
+
     def upvote(self):
         """Apply an upvote"""
         self._vote('upvote')
