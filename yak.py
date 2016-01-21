@@ -141,20 +141,23 @@ class Yak(WebObject):
         self._request('DELETE', url, params=params)
 
 
-class Comment(object):
-    def __init__(self, json):
-        self.back_id = json['backID']
-        self.comment = json['comment']
-        self.comment_id = json['commentID']
-        self.delivery_id = json['deliveryID']
-        self.gmt = json['gmt']
-        self.is_deleted = json['isDeleted']
-        self.liked = json['liked']
-        self.message_id = json['messageID']
-        self.number_of_likes = json['numberOfLikes']
-        self.overlay_id = json['overlayID']
-        self.poster_id = json['posterID']
-        self.time = json['time']
+class Comment(WebObject):
+    def __init__(self, auth_token, json):
+        self.auth_token = auth_token
+
+        self.back_id = json.get('backID', '')
+        self.comment = json.get('comment', '')
+        self.comment_id = json.get('commentID', '')
+        self.delivery_id = json.get('deliveryID', 0)
+        self.gmt = json.get('gmt', 0)
+        self.is_deleted = json.get('isDeleted', False)
+        self.liked = json.get('liked', 0)
+        self.message_id = json.get('messageID', '')
+        self.number_of_likes = json.get('numberOfLikes', 0)
+        self.overlay_id = json.get('overlayID', '')
+        self.poster_id = json.get('posterID', '')
+        self.time = json.get('time', '')
+
 
     def __str__(self):
         return self.comment.encode('ascii', 'ignore')
