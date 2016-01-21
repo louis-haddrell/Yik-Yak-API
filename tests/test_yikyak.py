@@ -110,6 +110,26 @@ class TestSuite(unittest.TestCase):
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
+    @mock.patch('yikyak.YikYak._request')
+    def test_get_yaks(self, mock_request):
+        mock_request.return_value = []
+
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+        yakker._get_yaks('hot', 50.93, -1.76)
+
+        # Expected request
+        url = 'https://yikyak.com/api/proxy/v1/messages/all/hot'
+        params = {
+            'userLat': 50.93,
+            'userLong': -1.76,
+            'lat': 50.93,
+            'long': -1.76,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('GET', url, params=params)
+
 
 if __name__ == "__main__":
     unittest.main()

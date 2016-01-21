@@ -90,7 +90,7 @@ class YikYak(WebObject):
             'myHerd': 0,
         }
 
-        response = self._request('GET', url, params=params, headers=headers)
+        response = self._request('GET', url, params=params)
 
         # Generate new Yak objects from the JSON
         yaks = [Yak(self.auth_token, data) for data in response]
