@@ -295,6 +295,11 @@ class CommentTests(unittest.TestCase):
 
     def test_message_url(self):
         """Assert Comment correctly generates its URL"""
+        comment = Comment('auth_token', {})
+        comment.message_id = 'R/1234'
+        comment.comment_id = 'R/abcd'
+        expected = 'https://yikyak.com/api/proxy/v1/messages/R%2F1234/comments/R%2Fabcd/'
+        self.assertEqual(comment.message_url, expected)
 
 if __name__ == '__main__':
     unittest.main()

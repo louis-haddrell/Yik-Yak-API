@@ -158,6 +158,13 @@ class Comment(WebObject):
         self.poster_id = json.get('posterID', '')
         self.time = json.get('time', '')
 
+    @property
+    def message_url(self):
+        url = 'https://yikyak.com/api/proxy/v1/messages/{}/comments/{}/'
+        # Convert / to %2F
+        message_id = urllib.parse.quote_plus(self.message_id)
+        comment_id = urllib.parse.quote_plus(self.comment_id)
+        return url.format(message_id, comment_id)
 
     def __str__(self):
         return self.comment.encode('ascii', 'ignore')
