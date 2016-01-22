@@ -230,6 +230,94 @@ class YakTests(unittest.TestCase):
         yak_str = yak.__str__()
         self.assertEqual(type(yak_str), str)
 
+    @mock.patch('yak.Yak._request')
+    def test_report_other(self, mock_request):
+        """
+        Assert reporting for 'Other' makes the correct API call
+        """
+        yak = Yak('auth_token', {})
+        yak.message_id = 'R/abcd'
+        yak.report(0, block=False)
+
+        # Expected API call
+        url = yak.message_url + 'report'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'block': False,
+            'reason': 'Other',
+        }
+
+        mock_request.assert_called_with('PUT', url, params=params, json=json)
+
+    @mock.patch('yak.Yak._request')
+    def test_report_offensive(self, mock_request):
+        """
+        Assert reporting for 'Offensive Content' makes the correct API call
+        """
+        yak = Yak('auth_token', {})
+        yak.message_id = 'R/abcd'
+        yak.report(1, block=False)
+
+        # Expected API call
+        url = yak.message_url + 'report'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'block': False,
+            'reason': 'Offensive',
+        }
+
+        mock_request.assert_called_with('PUT', url, params=params, json=json)
+
+    @mock.patch('yak.Yak._request')
+    def test_report_spam(self, mock_request):
+        """
+        Assert reporting for 'Spam' makes the correct API call
+        """
+        yak = Yak('auth_token', {})
+        yak.message_id = 'R/abcd'
+        yak.report(2, block=False)
+
+        # Expected API call
+        url = yak.message_url + 'report'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'block': False,
+            'reason': 'Spam',
+        }
+
+        mock_request.assert_called_with('PUT', url, params=params, json=json)
+
+    @mock.patch('yak.Yak._request')
+    def test_report_targeting(self, mock_request):
+        """
+        Assert reporting for 'post targets someone' makes the correct API call
+        """
+        yak = Yak('auth_token', {})
+        yak.message_id = 'R/abcd'
+        yak.report(3, block=False)
+
+        # Expected API call
+        url = yak.message_url + 'report'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'block': False,
+            'reason': 'Targeting',
+        }
+
+        mock_request.assert_called_with('PUT', url, params=params, json=json)
+
     # @mock.patch('yak.Yak._retrieve_comments')
     # def test_comments_list_getter_no_request(self, mock_retrieve):
     #     """
