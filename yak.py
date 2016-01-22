@@ -145,8 +145,32 @@ class Yak(Message):
         }
         return self._request('GET', url, params=params)
 
+    def compose_comment(self, comment):
+        """
+        Add a comment below this Yak
+
+        Arguments:
+            comment (string): the comment to post
+
+        Returns:
+            Comment object for the comment you posted
+        """
+        url = self.message_url + 'comments'
+        params = {
+            'userLat': 0.0,
+            'userLong': 0.0,
+        }
+        json = {
+            'comment': comment,
+        }
+
+        response = self._request('POST', url, params=params, json=json)
+        return Comment(self.auth_token, response)
+
     def refresh(self):
-        """Refresh the Yak information"""
+        """
+        Refresh the Yak information
+        """
         url = self.message_url
         params = {
             'userLat': 0,

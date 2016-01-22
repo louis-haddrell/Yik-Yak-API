@@ -318,6 +318,28 @@ class YakTests(unittest.TestCase):
 
         mock_request.assert_called_with('PUT', url, params=params, json=json)
 
+    @mock.patch('yak.Yak._request')
+    def test_compose_comment(self, mock_request):
+        """
+        Assert composing a comment makes the correct API call
+        """
+        yak = Yak('auth_token', {})
+        comment = yak.compose_comment('Hello world')
+
+        # Expected API call
+        url = yak.message_url + 'comments'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'comment': 'Hello world',
+        }
+        mock_request.assert_called_with('POST', url, params=params, json=json)
+
+        # Check returned comment
+        assert isinstance(comment, Comment)
+
     # @mock.patch('yak.Yak._retrieve_comments')
     # def test_comments_list_getter_no_request(self, mock_retrieve):
     #     """
