@@ -65,56 +65,6 @@ class TestSuite(unittest.TestCase):
         expected = 'https://yikyak.com/api/proxy/v1/messages/R%2F1234/comments/R%2Fabcd/'
         self.assertEqual(comment.message_url, expected)
 
-    @mock.patch('yak.Comment._request')
-    def test_upvote(self, mock_request):
-        """Assert the upvote API call is made correctly for this Comment"""
-        comment = Comment('auth_token', {})
-        comment.comment_id = 'R/abcd'
-        comment.message_id = 'R/1234'
-        comment.upvote()
-
-        # Assert API call is correct
-        url = comment.message_url + 'upvote'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        mock_request.assert_called_with('PUT', url, params=params)
-
-    @mock.patch('yak.Comment._request')
-    def test_downvote(self, mock_request):
-        """Assert the downvote API call is made correctly for this Comment"""
-        comment = Comment('auth_token', {})
-        comment.comment_id = 'R/abcd'
-        comment.message_id = 'R/1234'
-        comment.downvote()
-
-        # Assert API call is correct
-        url = comment.message_url + 'downvote'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        mock_request.assert_called_with('PUT', url, params=params)
-
-    @mock.patch('yak.Comment._request')
-    def test_delete(self, mock_request):
-        """
-        Assert that Comment.delete() makes the correct API call
-        """
-        comment = Comment('auth_token', {})
-        comment.comment_id = 'R/abcd'
-        comment.message_id = 'R/1234'
-        comment.delete()
-
-        # Expected request
-        url = comment.message_url
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        mock_request.assert_called_with('DELETE', url, params=params)
-
     def test_str(self):
         comment = Comment('auth_token', {})
         comment.message = 'Hello'

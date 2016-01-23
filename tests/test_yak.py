@@ -122,34 +122,6 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yak.thumbnail_url, self.img_data['thumbNailUrl'])
         self.assertEqual(yak.url, self.img_data['url'])
 
-    @mock.patch('yak.Yak._request')
-    def test_upvote(self, mock_request):
-        yak = Yak('auth_token', self.yak_data)
-        yak.upvote()
-
-        # Assert API call is correct
-        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcd/upvote'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        mock_request.assert_called_with('PUT', url, params=params)
-
-    @mock.patch('yak.Yak._request')
-    def test_downvote(self, mock_request):
-        yak = Yak('auth_token', self.yak_data)
-        yak.downvote()
-
-        # Assert API call is correct
-        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcd/downvote'
-
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-
-        mock_request.assert_called_with('PUT', url, params=params)
-
     def test_invalid_vote(self):
         """
         Assert that Yak._vote() throws an exception with invalid vote types
@@ -160,22 +132,6 @@ class TestSuite(unittest.TestCase):
 
         with self.assertRaises(AssertionError):
             yak._vote('sidevote')
-
-    @mock.patch('yak.Yak._request')
-    def test_delete(self, mock_request):
-        """
-        Assert that Yak.delete() makes the correct API call
-        """
-        yak = Yak('auth_token', self.yak_data)
-        yak.delete()
-
-        # Expected request
-        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabcd/'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        mock_request.assert_called_with('DELETE', url, params=params)
 
     def test_comments_list_constructor_default(self):
         """
@@ -231,94 +187,6 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(type(yak_str), str)
 
     @mock.patch('yak.Yak._request')
-    def test_report_other(self, mock_request):
-        """
-        Assert reporting for 'Other' makes the correct API call
-        """
-        yak = Yak('auth_token', {})
-        yak.message_id = 'R/abcd'
-        yak.report(0, block=False)
-
-        # Expected API call
-        url = yak.message_url + 'report'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        json = {
-            'block': False,
-            'reason': 'Other',
-        }
-
-        mock_request.assert_called_with('PUT', url, params=params, json=json)
-
-    @mock.patch('yak.Yak._request')
-    def test_report_offensive(self, mock_request):
-        """
-        Assert reporting for 'Offensive Content' makes the correct API call
-        """
-        yak = Yak('auth_token', {})
-        yak.message_id = 'R/abcd'
-        yak.report(1, block=False)
-
-        # Expected API call
-        url = yak.message_url + 'report'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        json = {
-            'block': False,
-            'reason': 'Offensive',
-        }
-
-        mock_request.assert_called_with('PUT', url, params=params, json=json)
-
-    @mock.patch('yak.Yak._request')
-    def test_report_spam(self, mock_request):
-        """
-        Assert reporting for 'Spam' makes the correct API call
-        """
-        yak = Yak('auth_token', {})
-        yak.message_id = 'R/abcd'
-        yak.report(2, block=False)
-
-        # Expected API call
-        url = yak.message_url + 'report'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        json = {
-            'block': False,
-            'reason': 'Spam',
-        }
-
-        mock_request.assert_called_with('PUT', url, params=params, json=json)
-
-    @mock.patch('yak.Yak._request')
-    def test_report_targeting(self, mock_request):
-        """
-        Assert reporting for 'post targets someone' makes the correct API call
-        """
-        yak = Yak('auth_token', {})
-        yak.message_id = 'R/abcd'
-        yak.report(3, block=False)
-
-        # Expected API call
-        url = yak.message_url + 'report'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        json = {
-            'block': False,
-            'reason': 'Targeting',
-        }
-
-        mock_request.assert_called_with('PUT', url, params=params, json=json)
-
-    @mock.patch('yak.Yak._request')
     def test_compose_comment(self, mock_request):
         """
         Assert composing a comment makes the correct API call
@@ -338,4 +206,4 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
         # Check returned comment
-        assert isinstance(comment, Comment)
+        self.assertTrue(isinstance(comment, Comment))
