@@ -31,6 +31,10 @@ class Message(WebObject):
         """Apply a downvote"""
         self._vote('downvote')
 
+    def upvote(self):
+        """Apply an upvote"""
+        self._vote('upvote')
+
     def delete(self):
         """Delete this Message"""
         url = self.message_url
@@ -53,10 +57,6 @@ class Message(WebObject):
             'reason': reasons[reason],
         }
         self._request('PUT', url, params=params, json=json)
-
-    def upvote(self):
-        """Apply an upvote"""
-        self._vote('upvote')
 
 
 class Yak(Message):

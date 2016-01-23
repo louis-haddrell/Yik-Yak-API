@@ -5,19 +5,43 @@ from yak import Message
 
 
 class TestSuite(unittest.TestCase):
-    def test_vote_invalid(self):
+    def test_message_url(self):
         message = Message()
 
         with self.assertRaises(NotImplementedError):
             message.message_url
 
+    def test_vote_invalid(self):
+        message = Message()
+
+        with self.assertRaises(AssertionError):
+            message._vote('qwerty')
+
     @mock.patch('yak.Message._request')
     @mock.patch('yak.Message.message_url')
-    def test_downvote(self, mock_url, mock_request):
+    def test_vote_upvote(self, mock_url, mock_request):
         mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
 
         message = Message()
-        message.downvote()
+        message._vote('upvote')
+
+        # Expected API call
+        method = 'PUT'
+        url = 'https://www.yikyak.com/upvote'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+
+        mock_request.assert_called_with(method, url, params=params)
+
+    @mock.patch('yak.Message._request')
+    @mock.patch('yak.Message.message_url')
+    def test_vote_downvote(self, mock_url, mock_request):
+        mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
+
+        message = Message()
+        message._vote('downvote')
 
         # Expected API call
         method = 'PUT'
@@ -29,23 +53,17 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params)
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
-    def test_upvote(self, mock_url, mock_request):
-        mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
+    @mock.patch('yak.Message._vote')
+    def test_downvote(self, mock_vote):
+        message = Message()
+        message.downvote()
+        mock_vote.assert_called_with('downvote')
 
+    @mock.patch('yak.Message._vote')
+    def test_upvote(self, mock_vote):
         message = Message()
         message.upvote()
-
-        # Expected API call
-        method = 'PUT'
-        url = 'https://www.yikyak.com/upvote'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-
-        mock_request.assert_called_with(method, url, params=params)
+        mock_vote.assert_called_with('upvote')
 
     @mock.patch('yak.Message._request')
     @mock.patch('yak.Message.message_url')
