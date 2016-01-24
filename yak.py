@@ -5,6 +5,12 @@ from web import WebObject
 
 
 class Message(WebObject):
+    def __init__(self):
+        self.params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+
     @property
     def message_url(self):
         """Make sure to implement this in subclasses"""
@@ -20,12 +26,7 @@ class Message(WebObject):
         assert action in ['downvote', 'upvote']
 
         url = self.message_url + action
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-
-        self._request('PUT', url, params=params)
+        self._request('PUT', url, params=self.params)
 
     def downvote(self):
         """Apply a downvote"""
@@ -38,29 +39,23 @@ class Message(WebObject):
     def delete(self):
         """Delete this Message"""
         url = self.message_url
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        self._request('DELETE', url, params=params)
+        self._request('DELETE', url, params=self.params)
 
     def report(self, reason, block=False):
         reasons = ["Other", "Offensive", "Spam", "Targeting"]
 
         url = self.message_url + "report"
-        params = {
-            'userLat': 0.0,
-            'userLong': 0.0,
-        }
         json = {
             'block': block,
             'reason': reasons[reason],
         }
-        self._request('PUT', url, params=params, json=json)
+        self._request('PUT', url, params=self.params, json=json)
 
 
 class Yak(Message):
     def __init__(self, auth_token, json):
+        super().__init__()
+
         self.auth_token = auth_token
 
         self.can_downvote = json.get('canDownVote', False)
@@ -139,11 +134,7 @@ class Yak(Message):
             JSON response from API call
         """
         url = self.message_url + 'comments'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        return self._request('GET', url, params=params)
+        return self._request('GET', url, params=self.params)
 
     def compose_comment(self, comment):
         """
@@ -156,15 +147,10 @@ class Yak(Message):
             Comment object for the comment you posted
         """
         url = self.message_url + 'comments'
-        params = {
-            'userLat': 0.0,
-            'userLong': 0.0,
-        }
         json = {
             'comment': comment,
         }
-
-        response = self._request('POST', url, params=params, json=json)
+        response = self._request('POST', url, params=self.params, json=json)
         return Comment(self.auth_token, response)
 
     def refresh(self):
@@ -172,17 +158,14 @@ class Yak(Message):
         Refresh the Yak information
         """
         url = self.message_url
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-
-        data = self._request('GET', url, params=params)
+        data = self._request('GET', url, params=self.params)
         self = self.__init__(self.auth_token, data)
 
 
 class Comment(Message):
     def __init__(self, auth_token, json):
+        super().__init__()
+
         self.auth_token = auth_token
 
         self.back_id = json.get('backID', '')
