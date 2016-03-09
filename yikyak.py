@@ -55,7 +55,7 @@ class YikYak(WebObject):
         Returns:
             Authentication token required for further YikYak access
         """
-        url = "https://yikyak.com/api/auth/pair"
+        url = "https://www.yikyak.com/api/auth/pair"
 
         json = {
             'countryCode': country_code,
