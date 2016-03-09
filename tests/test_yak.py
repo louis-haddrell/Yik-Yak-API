@@ -25,6 +25,7 @@ class TestSuite(unittest.TestCase):
             'longitude': -1.76,
             'message': "Hello World!",
             'messageID': "R/abcd",
+            'nickname': "YikYakBot",
             'numberOfLikes': 0,
             'posterID': "abcd",
             'readOnly': 0,
@@ -44,50 +45,8 @@ class TestSuite(unittest.TestCase):
         self.img_data.update(self.yak_data)
 
     def test_yak_construction(self):
-        yak = Yak('auth_token', self.yak_data)
-
-        self.assertEqual(yak.auth_token, 'auth_token')
-
-        # Check retrieval of JSON data
-        self.assertEqual(yak.can_downvote, self.yak_data['canDownVote'])
-        self.assertEqual(yak.can_reply, self.yak_data['canReply'])
-        self.assertEqual(yak.can_report, self.yak_data['canReport'])
-        self.assertEqual(yak.can_upvote, self.yak_data['canUpVote'])
-        self.assertEqual(yak.can_vote, self.yak_data['canVote'])
-        self.assertEqual(yak.comments, self.yak_data['comments'])
-        self.assertEqual(yak.delivery_id, self.yak_data['deliveryID'])
-        self.assertEqual(yak.gmt, self.yak_data['gmt'])
-        self.assertEqual(yak.handle, self.yak_data['handle'])
-        self.assertEqual(yak.hide_pin, self.yak_data['hidePin'])
-        self.assertEqual(yak.latitude, self.yak_data['latitude'])
-        self.assertEqual(yak.liked, self.yak_data['liked'])
-        self.assertEqual(yak.location, self.yak_data['location'])
-        self.assertEqual(
-            yak.location_display_style,
-            self.yak_data['locationDisplayStyle']
-        )
-        self.assertEqual(yak.location_name, self.yak_data['locationName'])
-        self.assertEqual(yak.longitude, self.yak_data['longitude'])
-        self.assertEqual(yak.message, self.yak_data['message'])
-        self.assertEqual(yak.message_id, self.yak_data['messageID'])
-        self.assertEqual(yak.number_of_likes, self.yak_data['numberOfLikes'])
-        self.assertEqual(yak.poster_id, self.yak_data['posterID'])
-        self.assertEqual(yak.read_only, self.yak_data['readOnly'])
-        self.assertEqual(yak.reyaked, self.yak_data['reyaked'])
-        self.assertEqual(yak.score, self.yak_data['score'])
-        self.assertEqual(yak.time, self.yak_data['time'])
-        self.assertEqual(yak.type, self.yak_data['type'])
-
-        # Check non-image defaults
-        self.assertEqual(yak.expand_in_feed, 0)
-        self.assertEqual(yak.image_height, 0)
-        self.assertEqual(yak.image_width, 0)
-        self.assertEqual(yak.thumbnail_url, None)
-        self.assertEqual(yak.url, None)
-
-    def test_image_yak_construction(self):
         yak = Yak('auth_token', self.img_data)
-
+        self.assertEqual(yak.auth_token, 'auth_token')
         self.assertEqual(yak.can_downvote, self.img_data['canDownVote'])
         self.assertEqual(yak.can_reply, self.img_data['canReply'])
         self.assertEqual(yak.can_report, self.img_data['canReport'])
@@ -95,32 +54,65 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yak.can_vote, self.img_data['canVote'])
         self.assertEqual(yak.comments, self.img_data['comments'])
         self.assertEqual(yak.delivery_id, self.img_data['deliveryID'])
+        self.assertEqual(yak.expand_in_feed, self.img_data['expandInFeed'])
         self.assertEqual(yak.gmt, self.img_data['gmt'])
         self.assertEqual(yak.handle, self.img_data['handle'])
         self.assertEqual(yak.hide_pin, self.img_data['hidePin'])
+        self.assertEqual(yak.image_height, self.img_data['imageHeight'])
+        self.assertEqual(yak.image_width, self.img_data['imageWidth'])
         self.assertEqual(yak.latitude, self.img_data['latitude'])
         self.assertEqual(yak.liked, self.img_data['liked'])
         self.assertEqual(yak.location, self.img_data['location'])
-        self.assertEqual(
-            yak.location_display_style,
-            self.img_data['locationDisplayStyle']
-        )
+        self.assertEqual(yak.location_display_style, self.img_data['locationDisplayStyle'])
         self.assertEqual(yak.location_name, self.img_data['locationName'])
         self.assertEqual(yak.longitude, self.img_data['longitude'])
         self.assertEqual(yak.message, self.img_data['message'])
         self.assertEqual(yak.message_id, self.img_data['messageID'])
+        self.assertEqual(yak.nickname, self.img_data['nickname'])
         self.assertEqual(yak.number_of_likes, self.img_data['numberOfLikes'])
         self.assertEqual(yak.poster_id, self.img_data['posterID'])
         self.assertEqual(yak.read_only, self.img_data['readOnly'])
         self.assertEqual(yak.reyaked, self.img_data['reyaked'])
         self.assertEqual(yak.score, self.img_data['score'])
+        self.assertEqual(yak.thumbnail_url, self.img_data['thumbNailUrl'])
         self.assertEqual(yak.time, self.img_data['time'])
         self.assertEqual(yak.type, self.img_data['type'])
-        self.assertEqual(yak.expand_in_feed, self.img_data['expandInFeed'])
-        self.assertEqual(yak.image_height, self.img_data['imageHeight'])
-        self.assertEqual(yak.image_width, self.img_data['imageWidth'])
-        self.assertEqual(yak.thumbnail_url, self.img_data['thumbNailUrl'])
         self.assertEqual(yak.url, self.img_data['url'])
+
+    def test_yak_defaults(self):
+        yak = Yak('auth_token', {})
+        self.assertEqual(yak.can_downvote, False)
+        self.assertEqual(yak.can_reply, False)
+        self.assertEqual(yak.can_report, 0)
+        self.assertEqual(yak.can_upvote, False)
+        self.assertEqual(yak.can_vote, False)
+        self.assertEqual(yak.comments, 0)
+        self.assertEqual(yak.comments_list, [])
+        self.assertEqual(yak.delivery_id, 0)
+        self.assertEqual(yak.expand_in_feed, 0)
+        self.assertEqual(yak.gmt, 0)
+        self.assertEqual(yak.handle, None)
+        self.assertEqual(yak.hide_pin, 0)
+        self.assertEqual(yak.image_height, 0)
+        self.assertEqual(yak.image_width, 0)
+        self.assertEqual(yak.latitude, 0.0)
+        self.assertEqual(yak.liked, 0)
+        self.assertEqual(yak.location, {})
+        self.assertEqual(yak.location_display_style, 0)
+        self.assertEqual(yak.location_name, "")
+        self.assertEqual(yak.longitude, 0.0)
+        self.assertEqual(yak.message, "")
+        self.assertEqual(yak.message_id, "")
+        self.assertEqual(yak.nickname, None)
+        self.assertEqual(yak.number_of_likes, 0)
+        self.assertEqual(yak.poster_id, "")
+        self.assertEqual(yak.read_only, 0)
+        self.assertEqual(yak.reyaked, 0)
+        self.assertEqual(yak.score, 0)
+        self.assertEqual(yak.thumbnail_url, None)
+        self.assertEqual(yak.time, "")
+        self.assertEqual(yak.type, 0)
+        self.assertEqual(yak.url, None)
 
     def test_invalid_vote(self):
         """

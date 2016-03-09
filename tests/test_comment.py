@@ -15,6 +15,7 @@ class TestSuite(unittest.TestCase):
             'isDeleted': False,
             'liked': 0,
             'messageID': 'R/abcd',
+            'nickname': "YikYakBot",
             'numberOfLikes': 0,
             'overlayID': '001',
             'posterID': 'poster',
@@ -33,6 +34,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(comment.is_deleted, data['isDeleted'])
         self.assertEqual(comment.liked, data['liked'])
         self.assertEqual(comment.message_id, data['messageID'])
+        self.assertEqual(comment.nickname, data['nickname'])
         self.assertEqual(comment.number_of_likes, data['numberOfLikes'])
         self.assertEqual(comment.overlay_id, data['overlayID'])
         self.assertEqual(comment.poster_id, data['posterID'])
@@ -52,6 +54,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(comment.is_deleted, False)
         self.assertEqual(comment.liked, 0)
         self.assertEqual(comment.message_id, '')
+        self.assertEqual(comment.nickname, None)
         self.assertEqual(comment.number_of_likes, 0)
         self.assertEqual(comment.overlay_id, '')
         self.assertEqual(comment.poster_id, '')

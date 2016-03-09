@@ -58,18 +58,21 @@ class Yak(Message):
 
         self.auth_token = auth_token
 
+        self._comments_list = []
         self.can_downvote = json.get('canDownVote', False)
         self.can_reply = json.get('canReply', False)
         self.can_report = json.get('canReport', 0)
         self.can_upvote = json.get('canUpVote', False)
         self.can_vote = json.get('canVote', False)
         self.comments = json.get('comments', 0)
-        self._comments_list = []
         self.comments_list = json.get('commentsList', [])
         self.delivery_id = json.get('deliveryID', 0)
+        self.expand_in_feed = json.get('expandInFeed', 0)
         self.gmt = json.get('gmt', 0)
         self.handle = json.get('handle', None)
         self.hide_pin = json.get('hidePin', 0)
+        self.image_height = json.get('imageHeight', 0)
+        self.image_width = json.get('imageWidth', 0)
         self.latitude = json.get('latitude', 0.0)
         self.liked = json.get('liked', 0)
         self.location = json.get('location', {})
@@ -78,19 +81,15 @@ class Yak(Message):
         self.longitude = json.get('longitude', 0.0)
         self.message = json.get('message', "")
         self.message_id = json.get('messageID', "")
+        self.nickname = json.get('nickname', None)
         self.number_of_likes = json.get('numberOfLikes', 0)
         self.poster_id = json.get('posterID', "")
         self.read_only = json.get('readOnly', 0)
         self.reyaked = json.get('reyaked', 0)
         self.score = json.get('score', 0)
+        self.thumbnail_url = json.get('thumbNailUrl', None)
         self.time = json.get('time', "")
         self.type = json.get('type', 0)
-
-        # Image Yaks
-        self.expand_in_feed = json.get('expandInFeed', 0)
-        self.image_height = json.get('imageHeight', 0)
-        self.image_width = json.get('imageWidth', 0)
-        self.thumbnail_url = json.get('thumbNailUrl', None)
         self.url = json.get('url', None)
 
     def __str__(self):
@@ -176,6 +175,7 @@ class Comment(Message):
         self.is_deleted = json.get('isDeleted', False)
         self.liked = json.get('liked', 0)
         self.message_id = json.get('messageID', '')
+        self.nickname = json.get('nickname', None)
         self.number_of_likes = json.get('numberOfLikes', 0)
         self.overlay_id = json.get('overlayID', '')
         self.poster_id = json.get('posterID', '')
