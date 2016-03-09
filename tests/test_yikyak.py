@@ -91,7 +91,6 @@ class TestSuite(unittest.TestCase):
         Assert YikYak.compose_yak() makes the correct API call
         """
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
 
         # Expected request
         url = "https://www.yikyak.com/api/proxy/v1/messages"
@@ -117,7 +116,6 @@ class TestSuite(unittest.TestCase):
         Assert YikYak.compose_yak() makes the correct API call
         """
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
 
         # Expected request
         url = "https://www.yikyak.com/api/proxy/v1/messages"
@@ -142,7 +140,6 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = []
 
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
         yakker._get_yaks('hot', 50.93, -1.76)
 
         # Expected request
@@ -165,7 +162,6 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = {'code': 0}
 
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
         result = yakker.check_handle_availability('available')
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
@@ -183,7 +179,6 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = {'code': 1}
 
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
         result = yakker.check_handle_availability('invalid')
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
@@ -201,7 +196,6 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = {'code': 2}
 
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
         result = yakker.check_handle_availability('unavailable')
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
@@ -216,7 +210,6 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = {'code': 0}
 
         yakker = YikYak()
-        yakker.auth_token = 'auth_token'
         yakker.claim_handle('YikYakBot')
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         json = {
