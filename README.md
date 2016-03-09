@@ -7,7 +7,7 @@ The API is rate limited to 30 requests per 60 seconds. Breaching this limit will
 
 ###Yak
 
-|Key|Value|Notes
+|Key|Value Type|Description
 |---|---|---
 |`canDownVote`|bool
 |`canReply`|bool|
@@ -17,7 +17,7 @@ The API is rate limited to 30 requests per 60 seconds. Breaching this limit will
 |`comments`|int|Number of comments
 |`deliveryID`|int|Inverse position in list (i.e. 0 at bottom)
 |`gmt`|float
-|`handle`|???|Seems to be unused
+|`handle`|null|Unused
 |`hidePin`|int|`0` or `1`
 |`latitude`|float|Yak latitude to 2dp
 |`liked`|int|`0` or `1`
@@ -40,7 +40,7 @@ The API is rate limited to 30 requests per 60 seconds. Breaching this limit will
 |`imageHeight`|int|Pixel height
 |`imageWidth`|int|Pixel width
 |`thumbNailUrl`|url|Link to thumb
-|`url`|url|Link to full size
+|`url`|url|Link to full size image
 
 ###Comment
 |Key|Value|Notes
@@ -176,20 +176,23 @@ Returns up to 200(?) Yak objects
 ###Compose a Yak
 `POST https://www.yikyak.com/api/proxy/v1/messages`
 
-**Parameters**
-```
-lat=<latitude>
-long=<longitude>
-userLat=0
-userLong=0
-```
+####Request Parameters
+|Key|Value Type|Description
+|---|---|---|
+|`lat`|float|Latitude to post to
+|`long`|float|Longitude to post to
+|`userLat`|float|No noticeable effect; set to `0`
+|`userLong`|float|No noticeable effect; set to `0`
 
-**Body** (JSON)
-```
-{
-    'message': <text to post>,
-}
-```
+####Request Body
+
+|Key|Value Type|Description
+|---|---|---|
+|`message`|string|Contents of the Yak to submit
+|`handle`|bool|Display your handle?
+
+> **Note**
+> `handle` is currently optional and defaults to `false`
 
 ###Yak Details
 `GET https://www.yikyak.com/api/proxy/v1/messages/<yak_id>`
@@ -268,58 +271,29 @@ Selecting to block the poster of a Yak will prevent you from ever seeing their Y
 
 Reason must be one of the following: `Offensive`, `Other`, `Spam`, `Targeting`
 
-
 ###Check Handle Availability
 `GET https://www.yikyak.com/api/proxy/v1/yakker/handles`
 
-**Request Query String**
-```
-handle=<string>
-```
+####Request Parameters
+|Key|Value Type|Description
+|---|---|---|
+|`handle`|string|Handle to claim
 
-**Response**
-```
-{
-    'code': <int>
-}
-```
-
-`0`: available
-`1`: invalid
-`2`: already claimed
-
-###Check Handle Availability
-`GET https://www.yikyak.com/api/proxy/v1/yakker/handles`
-
-**Request Query String**
-```
-{
-    "handle": <string>
-}
-```
-
-**Response**
-```
-{'code': <int>}
-```
-
-`0` - available
-`1` - invalid
-`2` - already claimed
+####JSON Response
+|Key|Value Type|Description
+|---|---|---|
+|`code`|int|`0` success; `1` invalid; `2` taken
 
 ###Claim Handle
 `POST https://www.yikyak.com/api/proxy/v1/yakker/handles`
 
-**JSON Request Body**
-```json
-{handle: <string>}
-```
+####Request Body
+|Key|Value Type|Description
+|---|---|---|
+|`handle`|string|Handle to claim
 
-**JSON Response**
-```json
-{'code': <int>}
-```
+####JSON Response
+|Key|Value Type|Description
+|---|---|---|
+|`code`|int|`0` success; `1` invalid; `2` taken
 
-`0` - success
-`1` - invalid
-`2` - already claimed
