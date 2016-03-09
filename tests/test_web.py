@@ -9,6 +9,10 @@ class TestSuite(unittest.TestCase):
     @mock.patch('web.requests.request')
     def test_request_headers(self, mock_request):
         """Assert standard headers are sent in the request"""
+        mock_response = mock.Mock()
+        mock_request.return_value = mock_response
+        mock_response.json.return_value = {}
+
         web = WebObject()
         web.auth_token = 'auth_token'
 
