@@ -120,7 +120,9 @@ New auth token
 
 ##Authenticated Operations
 
-Once we have retrieved the authentication token, we can interact with the API. For all authenticated operations, the following headers must be sent:
+Once we have retrieved the authentication token, we can interact with the API.
+
+For all authenticated operations, the following headers must be sent:
 
 ```
 {
@@ -133,14 +135,6 @@ Once we have retrieved the authentication token, we can interact with the API. F
 
 ###Yakker
 `GET https://www.yikyak.com/api/proxy/v1/yakker`  
-
-**Request Headers**
-```
-{
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
-}
-```
 
 **Response**
 ```
@@ -166,15 +160,7 @@ Once we have retrieved the authentication token, we can interact with the API. F
 `GET https://www.yikyak.com/api/proxy/v1/messages/all/new`  
 `GET https://www.yikyak.com/api/proxy/v1/messages/all/hot`  
 
-**Request Headers**
-```
-{
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
-}
-```
-
-**Request Query String**
+**Query String**
 ```
 userLat=0
 userLong=0
@@ -190,15 +176,7 @@ Returns up to 200(?) Yak objects
 ###Compose a Yak
 `POST https://www.yikyak.com/api/proxy/v1/messages`
 
-**Request Headers**
-```
-{
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
-}
-```
-
-**Request Parameters**
+**Parameters**
 ```
 lat=<latitude>
 long=<longitude>
@@ -206,7 +184,7 @@ userLat=0
 userLong=0
 ```
 
-**Request Body** (JSON)
+**Body** (JSON)
 ```
 {
     'message': <text to post>,
@@ -220,19 +198,11 @@ userLong=0
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
 > `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-**Request Query String**  
+**Query String**  
 These values must be sent, but appear to have no effect.  
 ```
 userLat=0.0
 userLong=0.0
-```
-
-**Request Headers**  
-```
-{
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
-}
 ```
 
 **Response**  
@@ -248,19 +218,11 @@ Returns a JSON Yak object (see above)
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
 > `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-**Request Query String**  
+**Query String**  
 These values must be sent, but appear to have no effect.  
 ```
 userLat=0.0
 userLong=0.0
-```
-
-**Request Headers**  
-```
-{
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
-}
 ```
 
 **Response**  
@@ -273,19 +235,11 @@ JSON parse fails on the response. Probably a malformed Yak object.
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
 > `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-**Request Query String**  
+**Query String**  
 These values must be sent, but appear to have no effect.  
 ```
 userLat=0.0
 userLong=0.0
-```
-
-**Request Headers**  
-```
-{
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
-}
 ```
 
 ###Report a Yak
@@ -295,7 +249,7 @@ userLong=0.0
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
 > `R%2Fxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-**Request Query String**  
+**Query String**  
 These values must be sent, but appear to have no effect.  
 ```
 userLat=0.0
@@ -315,10 +269,57 @@ Selecting to block the poster of a Yak will prevent you from ever seeing their Y
 Reason must be one of the following: `Offensive`, `Other`, `Spam`, `Targeting`
 
 
-**Request Headers**  
+###Check Handle Availability
+`GET https://www.yikyak.com/api/proxy/v1/yakker/handles`
+
+**Request Query String**
+```
+handle=<string>
+```
+
+**Response**
 ```
 {
-    'Referer': 'https://www.yikyak.com/',
-    'x-access-token': <auth_token>,
+    'code': <int>
 }
 ```
+
+`0`: available
+`1`: invalid
+`2`: already claimed
+
+###Check Handle Availability
+`GET https://www.yikyak.com/api/proxy/v1/yakker/handles`
+
+**Request Query String**
+```
+{
+    "handle": <string>
+}
+```
+
+**Response**
+```
+{'code': <int>}
+```
+
+`0` - available
+`1` - invalid
+`2` - already claimed
+
+###Claim Handle
+`POST https://www.yikyak.com/api/proxy/v1/yakker/handles`
+
+**JSON Request Body**
+```json
+{handle: <string>}
+```
+
+**JSON Response**
+```json
+{'code': <int>}
+```
+
+`0` - success
+`1` - invalid
+`2` - already claimed
