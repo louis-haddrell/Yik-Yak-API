@@ -24,7 +24,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(pin, '123456')
 
         # Assert _request() call is correct
-        url = "https://yikyak.com/api/auth/initPairing"
+        url = "https://www.yikyak.com/api/auth/initPairing"
         data = {'userID': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345'}
         mock_request.assert_called_with('POST', url, data=data)
 
@@ -40,7 +40,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(token, 'auth_token')
 
         # Assert API call is correct
-        url = 'https://yikyak.com/api/auth/pair'
+        url = 'https://www.yikyak.com/api/auth/pair'
         json = {
             'countryCode': 'GBR',
             'phoneNumber': '1234567890',
@@ -94,7 +94,7 @@ class TestSuite(unittest.TestCase):
         yakker.auth_token = 'auth_token'
 
         # Expected request
-        url = "https://yikyak.com/api/proxy/v1/messages"
+        url = "https://www.yikyak.com/api/proxy/v1/messages"
         params = {
             'lat': 50.93,
             'long': -1.76,
@@ -119,7 +119,7 @@ class TestSuite(unittest.TestCase):
         yakker._get_yaks('hot', 50.93, -1.76)
 
         # Expected request
-        url = 'https://yikyak.com/api/proxy/v1/messages/all/hot'
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
         params = {
             'userLat': 50.93,
             'userLong': -1.76,
