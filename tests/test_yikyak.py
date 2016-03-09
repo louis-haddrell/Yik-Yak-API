@@ -79,7 +79,7 @@ class TestSuite(unittest.TestCase):
     def test_get_yaks_invalid(self):
         """
         Assert YikYak._get_yaks() throws an AssertionError if we attempt to
-        retireve from a feed that is not 'hot' or 'new'
+        retrieve from a feed that is not 'hot' or 'new'
         """
         yakker = YikYak()
         with self.assertRaises(AssertionError):
@@ -103,10 +103,37 @@ class TestSuite(unittest.TestCase):
             'userLong': 0,
         }
         json = {
+            'handle': False,
             'message': 'Hello World',
         }
 
         yak = yakker.compose_yak("Hello World", 50.93, -1.76)
+        self.assertTrue(isinstance(yak, Yak))
+        mock_request.assert_called_with('POST', url, params=params, json=json)
+
+    @mock.patch('yikyak.YikYak._request')
+    def test_compose_yak_with_handle(self, mock_request):
+        """
+        Assert YikYak.compose_yak() makes the correct API call
+        """
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+
+        # Expected request
+        url = "https://www.yikyak.com/api/proxy/v1/messages"
+        params = {
+            'lat': 50.93,
+            'long': -1.76,
+            'myHerd': 0,
+            'userLat': 0,
+            'userLong': 0,
+        }
+        json = {
+            'handle': True,
+            'message': 'Hello World',
+        }
+
+        yak = yakker.compose_yak("Hello World", 50.93, -1.76, handle=True)
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
@@ -141,7 +168,6 @@ class TestSuite(unittest.TestCase):
         yakker.auth_token = 'auth_token'
         result = yakker.check_handle_availability('available')
 
-
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         params = {
             'handle': 'available',
@@ -159,7 +185,6 @@ class TestSuite(unittest.TestCase):
         yakker = YikYak()
         yakker.auth_token = 'auth_token'
         result = yakker.check_handle_availability('invalid')
-
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         params = {

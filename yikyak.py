@@ -120,7 +120,7 @@ class YikYak(WebObject):
         """
         return self._get_yaks('hot', latitude, longitude)
 
-    def compose_yak(self, message, latitude, longitude):
+    def compose_yak(self, message, latitude, longitude, handle=False):
         """
         Compose a new Yak at a co-ordinate
 
@@ -138,6 +138,7 @@ class YikYak(WebObject):
             'userLong': 0,
         }
         json = {
+            'handle': handle,
             'message': message,
         }
 
