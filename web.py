@@ -1,5 +1,7 @@
+import logging
 import requests
 
+from json import dumps as json_dumps
 from json.decoder import JSONDecodeError
 
 
@@ -36,13 +38,21 @@ class WebObject(object):
         # Place back in kwargs
         kwargs['headers'] = auth_headers
 
+        logging.debug(method)
+        logging.debug(url)
+        logging.debug(kwargs)
+
         response = requests.request(method, url, **kwargs)
-        response.raise_for_status()
 
         try:
-            return response.json()
+            json = response.json()
         except JSONDecodeError:
-            return {}
+            logging.warning("Failed to decode JSON from response")
+            json = {}
+
+        logging.debug(json_dumps(json, indent=4))
+        response.raise_for_status()
+        return json
 
     def refresh_token(self):
         """
