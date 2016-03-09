@@ -11,7 +11,7 @@ class TestSuite(unittest.TestCase):
         """
         Assert init_pairing() makes API call to retrieve auth PIN
         """
-        yakker = YikYak()
+        client = YikYak()
 
         # Mock response
         mock_request.return_value = {
@@ -20,7 +20,7 @@ class TestSuite(unittest.TestCase):
         }
 
         # Assert PIN is returned
-        pin = yakker.init_pairing("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345")
+        pin = client.init_pairing("ABCDEFGHIJKLMNOPQRSTUVWXYZ012345")
         self.assertEqual(pin, '123456')
 
         # Assert _request() call is correct
@@ -30,13 +30,13 @@ class TestSuite(unittest.TestCase):
 
     @mock.patch('yikyak.YikYak._request')
     def test_pair(self, mock_request):
-        yakker = YikYak()
+        client = YikYak()
 
         # Mock response
         mock_request.return_value = 'auth_token'
 
         # Assert authentication token is returned
-        token = yakker.pair('GBR', '1234567890', '123456')
+        token = client.pair('GBR', '1234567890', '123456')
         self.assertEqual(token, 'auth_token')
 
         # Assert API call is correct
@@ -58,22 +58,22 @@ class TestSuite(unittest.TestCase):
         """
         mock_pair.return_value = "auth_token"
 
-        yakker = YikYak()
-        yakker.login("GBR", "1234567890", "123456")
+        client = YikYak()
+        client.login("GBR", "1234567890", "123456")
 
-        self.assertEqual(yakker.auth_token, "auth_token")
+        self.assertEqual(client.auth_token, "auth_token")
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
 
     @mock.patch('yikyak.YikYak._get_yaks')
     def test_get_hot(self, mock_get):
-        yakker = YikYak()
-        yakker.get_hot(1, 2)
+        client = YikYak()
+        client.get_hot(1, 2)
         mock_get.assert_called_with('hot', 1, 2)
 
     @mock.patch('yikyak.YikYak._get_yaks')
     def test_get_new(self, mock_get):
-        yakker = YikYak()
-        yakker.get_new(1, 2)
+        client = YikYak()
+        client.get_new(1, 2)
         mock_get.assert_called_with('new', 1, 2)
 
     def test_get_yaks_invalid(self):
@@ -81,16 +81,16 @@ class TestSuite(unittest.TestCase):
         Assert YikYak._get_yaks() throws an AssertionError if we attempt to
         retrieve from a feed that is not 'hot' or 'new'
         """
-        yakker = YikYak()
+        client = YikYak()
         with self.assertRaises(AssertionError):
-            yakker._get_yaks('abcd', 1, 2)
+            client._get_yaks('abcd', 1, 2)
 
     @mock.patch('yikyak.YikYak._request')
     def test_compose_yak(self, mock_request):
         """
         Assert YikYak.compose_yak() makes the correct API call
         """
-        yakker = YikYak()
+        client = YikYak()
 
         # Expected request
         url = "https://www.yikyak.com/api/proxy/v1/messages"
@@ -106,7 +106,7 @@ class TestSuite(unittest.TestCase):
             'message': 'Hello World',
         }
 
-        yak = yakker.compose_yak("Hello World", 50.93, -1.76)
+        yak = client.compose_yak("Hello World", 50.93, -1.76)
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
@@ -115,7 +115,7 @@ class TestSuite(unittest.TestCase):
         """
         Assert YikYak.compose_yak() makes the correct API call
         """
-        yakker = YikYak()
+        client = YikYak()
 
         # Expected request
         url = "https://www.yikyak.com/api/proxy/v1/messages"
@@ -131,7 +131,7 @@ class TestSuite(unittest.TestCase):
             'message': 'Hello World',
         }
 
-        yak = yakker.compose_yak("Hello World", 50.93, -1.76, handle=True)
+        yak = client.compose_yak("Hello World", 50.93, -1.76, handle=True)
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
@@ -139,8 +139,8 @@ class TestSuite(unittest.TestCase):
     def test_get_yaks(self, mock_request):
         mock_request.return_value = []
 
-        yakker = YikYak()
-        yakker._get_yaks('hot', 50.93, -1.76)
+        client = YikYak()
+        client._get_yaks('hot', 50.93, -1.76)
 
         # Expected request
         url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
@@ -161,8 +161,8 @@ class TestSuite(unittest.TestCase):
         """
         mock_request.return_value = {'code': 0}
 
-        yakker = YikYak()
-        result = yakker.check_handle_availability('available')
+        client = YikYak()
+        result = client.check_handle_availability('available')
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         params = {
@@ -172,14 +172,14 @@ class TestSuite(unittest.TestCase):
         self.assertTrue(result)
 
     @mock.patch('yikyak.YikYak._request')
-    def test_check_handle_availability_available(self, mock_request):
+    def test_check_handle_availability_invalid(self, mock_request):
         """
         check_handle_availability() must return False for an invalid handle
         """
         mock_request.return_value = {'code': 1}
 
-        yakker = YikYak()
-        result = yakker.check_handle_availability('invalid')
+        client = YikYak()
+        result = client.check_handle_availability('invalid')
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         params = {
@@ -195,8 +195,8 @@ class TestSuite(unittest.TestCase):
         """
         mock_request.return_value = {'code': 2}
 
-        yakker = YikYak()
-        result = yakker.check_handle_availability('unavailable')
+        client = YikYak()
+        result = client.check_handle_availability('unavailable')
 
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         params = {
@@ -209,8 +209,8 @@ class TestSuite(unittest.TestCase):
     def test_claim_handle(self, mock_request):
         mock_request.return_value = {'code': 0}
 
-        yakker = YikYak()
-        yakker.claim_handle('YikYakBot')
+        client = YikYak()
+        client.claim_handle('YikYakBot')
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         json = {
             'handle': 'YikYakBot',

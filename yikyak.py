@@ -1,8 +1,21 @@
 from web import WebObject
 from yak import Yak
+from yakker import Yakker
 
 
 class YikYak(WebObject):
+    def __init__(self):
+        super().__init__()
+        self._yakker = None
+
+    @property
+    def yakker(self):
+        if not self._yakker:
+            self._yakker = Yakker(self.auth_token, {})
+            self._yakker.refresh()
+
+        return self._yakker
+
     def login(self, country_code, phone_number, pin):
         """
         Login to YikYak and get our auth token
