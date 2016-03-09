@@ -130,6 +130,71 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with('GET', url, params=params)
 
+    @mock.patch('yikyak.YikYak._request')
+    def test_check_handle_availability_available(self, mock_request):
+        """
+        check_handle_availability() must return True for an available handle
+        """
+        mock_request.return_value = {'code': 0}
 
-if __name__ == "__main__":
-    unittest.main()
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+        result = yakker.check_handle_availability('available')
+
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        params = {
+            'handle': 'available',
+        }
+        mock_request.assert_called_with('GET', url, params=params)
+        self.assertTrue(result)
+
+    @mock.patch('yikyak.YikYak._request')
+    def test_check_handle_availability_available(self, mock_request):
+        """
+        check_handle_availability() must return False for an invalid handle
+        """
+        mock_request.return_value = {'code': 1}
+
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+        result = yakker.check_handle_availability('invalid')
+
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        params = {
+            'handle': 'invalid',
+        }
+        mock_request.assert_called_with('GET', url, params=params)
+        self.assertFalse(result)
+
+    @mock.patch('yikyak.YikYak._request')
+    def test_check_handle_availability_unavailable(self, mock_request):
+        """
+        check_handle_availability() must return False for an unavailable handle
+        """
+        mock_request.return_value = {'code': 2}
+
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+        result = yakker.check_handle_availability('unavailable')
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        params = {
+            'handle': 'unavailable',
+        }
+        mock_request.assert_called_with('GET', url, params=params)
+        self.assertFalse(result)
+
+    @mock.patch('yikyak.YikYak._request')
+    def test_claim_handle(self, mock_request):
+        mock_request.return_value = {'code': 0}
+
+        yakker = YikYak()
+        yakker.auth_token = 'auth_token'
+        yakker.claim_handle('YikYakBot')
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        json = {
+            'handle': 'YikYakBot',
+        }
+        mock_request.assert_called_with('POST', url, json=json)

@@ -143,3 +143,36 @@ class YikYak(WebObject):
 
         data = self._request('POST', url, params=params, json=json)
         return Yak(self.auth_token, data)
+
+    def check_handle_availability(self, handle):
+        """
+        Check availability of a handle
+
+        Arguments:
+            handle (string): handle to check
+
+        Returns:
+            Boolean representing availability
+        """
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        params = {
+            'handle': handle,
+        }
+        data = self._request('GET', url, params=params)
+        return data['code'] == 0
+
+    def claim_handle(self, handle):
+        """
+        Claim a handle
+
+        Arguments:
+            handle (string): handle to check
+
+        Returns:
+            Boolean representing availability
+        """
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        json = {
+            'handle': handle,
+        }
+        data = self._request('POST', url, json=json)
