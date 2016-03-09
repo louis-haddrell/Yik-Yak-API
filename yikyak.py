@@ -1,5 +1,3 @@
-import settings
-
 from web import WebObject
 from yak import Yak
 
@@ -38,7 +36,7 @@ class YikYak(WebObject):
         Returns:
             6 digit PIN code for use with pairing
         """
-        url = "https://yikyak.com/api/auth/initPairing"
+        url = "https://www.yikyak.com/api/auth/initPairing"
         data = {'userID': user_id}
         response = self._request('POST', url, data=data)
         return response['pin']
@@ -80,7 +78,7 @@ class YikYak(WebObject):
         """
         assert feed in ['hot', 'new']
 
-        url = 'https://yikyak.com/api/proxy/v1/messages/all/' + feed
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/' + feed
 
         params = {
             'userLat': latitude,
@@ -131,7 +129,7 @@ class YikYak(WebObject):
             latitude (float): location latitude
             longitude (float): location longitude
         """
-        url = "https://yikyak.com/api/proxy/v1/messages"
+        url = "https://www.yikyak.com/api/proxy/v1/messages"
         params = {
             'lat': latitude,
             'long': longitude,
