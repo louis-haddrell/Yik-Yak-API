@@ -1,6 +1,6 @@
-from web import WebObject
-from yak import Yak
-from yakker import Yakker
+from .web import WebObject
+from .yak import Yak
+from .yakker import Yakker
 
 
 class YikYak(WebObject):

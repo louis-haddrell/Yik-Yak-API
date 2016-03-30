@@ -1,4 +1,4 @@
-from web import WebObject
+from .web import WebObject
 
 
 class Yakker(WebObject):

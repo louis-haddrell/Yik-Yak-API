@@ -1,7 +1,7 @@
 import unittest
-
 from unittest import mock
-from yak import Message
+
+from yikyakapi.yak import Message
 
 
 class TestSuite(unittest.TestCase):
@@ -17,8 +17,8 @@ class TestSuite(unittest.TestCase):
         with self.assertRaises(AssertionError):
             message._vote('qwerty')
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_vote_upvote(self, mock_url, mock_request):
         mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
 
@@ -35,8 +35,8 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params)
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_vote_downvote(self, mock_url, mock_request):
         mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
 
@@ -53,20 +53,20 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params)
 
-    @mock.patch('yak.Message._vote')
+    @mock.patch('yikyakapi.yak.Message._vote')
     def test_downvote(self, mock_vote):
         message = Message()
         message.downvote()
         mock_vote.assert_called_with('downvote')
 
-    @mock.patch('yak.Message._vote')
+    @mock.patch('yikyakapi.yak.Message._vote')
     def test_upvote(self, mock_vote):
         message = Message()
         message.upvote()
         mock_vote.assert_called_with('upvote')
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_delete(self, mock_url, mock_request):
         mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
 
@@ -83,8 +83,8 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params)
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_report_other(self, mock_url, mock_request):
         """
         Assert reporting for 'Other' makes the correct API call
@@ -108,8 +108,8 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params, json=json)
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_report_offensive(self, mock_url, mock_request):
         """
         Assert reporting for 'Offensive Content' makes the correct API call
@@ -133,8 +133,8 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params, json=json)
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_report_spam(self, mock_url, mock_request):
         """
         Assert reporting for 'Spam' makes the correct API call
@@ -158,8 +158,8 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with(method, url, params=params, json=json)
 
-    @mock.patch('yak.Message._request')
-    @mock.patch('yak.Message.message_url')
+    @mock.patch('yikyakapi.yak.Message._request')
+    @mock.patch('yikyakapi.yak.Message.message_url')
     def test_report_targeting(self, mock_url, mock_request):
         """
         Assert reporting for 'post targets someone' makes the correct API call

@@ -1,7 +1,7 @@
 import unittest
-
 from unittest import mock
-from yak import Comment
+
+from yikyakapi.yak import Comment
 
 
 class TestSuite(unittest.TestCase):

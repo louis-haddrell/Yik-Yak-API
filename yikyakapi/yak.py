@@ -1,7 +1,7 @@
 
 import urllib.parse
 
-from web import WebObject
+from .web import WebObject
 
 
 class Message(WebObject):

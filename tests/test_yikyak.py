@@ -2,11 +2,11 @@ import json
 import unittest
 from unittest import mock
 
-from yikyak import *
+from yikyakapi.yikyak import *
 
 
 class TestSuite(unittest.TestCase):
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_init_pairing(self, mock_request):
         """
         Assert init_pairing() makes API call to retrieve auth PIN
@@ -28,7 +28,7 @@ class TestSuite(unittest.TestCase):
         data = {'userID': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ012345'}
         mock_request.assert_called_with('POST', url, data=data)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_pair(self, mock_request):
         client = YikYak()
 
@@ -49,7 +49,7 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with('POST', url, json=json)
 
-    @mock.patch('yikyak.YikYak.pair')
+    @mock.patch('yikyakapi.yikyak.YikYak.pair')
     def test_login(self, mock_pair):
         """
         Assert .login() grabs the auth token
@@ -64,13 +64,13 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(client.auth_token, "auth_token")
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
 
-    @mock.patch('yikyak.YikYak._get_yaks')
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
     def test_get_hot(self, mock_get):
         client = YikYak()
         client.get_hot(1, 2)
         mock_get.assert_called_with('hot', 1, 2)
 
-    @mock.patch('yikyak.YikYak._get_yaks')
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
     def test_get_new(self, mock_get):
         client = YikYak()
         client.get_new(1, 2)
@@ -85,7 +85,7 @@ class TestSuite(unittest.TestCase):
         with self.assertRaises(AssertionError):
             client._get_yaks('abcd', 1, 2)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_compose_yak(self, mock_request):
         """
         Assert YikYak.compose_yak() makes the correct API call
@@ -110,7 +110,7 @@ class TestSuite(unittest.TestCase):
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_compose_yak_with_handle(self, mock_request):
         """
         Assert YikYak.compose_yak() makes the correct API call
@@ -135,7 +135,7 @@ class TestSuite(unittest.TestCase):
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_get_yaks(self, mock_request):
         mock_request.return_value = []
 
@@ -154,7 +154,7 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with('GET', url, params=params)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_check_handle_availability_available(self, mock_request):
         """
         check_handle_availability() must return True for an available handle
@@ -171,7 +171,7 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
         self.assertTrue(result)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_check_handle_availability_invalid(self, mock_request):
         """
         check_handle_availability() must return False for an invalid handle
@@ -188,7 +188,7 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
         self.assertFalse(result)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_check_handle_availability_unavailable(self, mock_request):
         """
         check_handle_availability() must return False for an unavailable handle
@@ -205,7 +205,7 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
         self.assertFalse(result)
 
-    @mock.patch('yikyak.YikYak._request')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_claim_handle(self, mock_request):
         mock_request.return_value = {'code': 0}
 

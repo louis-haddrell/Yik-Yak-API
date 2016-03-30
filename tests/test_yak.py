@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from yak import *
+from yikyakapi.yak import *
 
 
 class TestSuite(unittest.TestCase):
@@ -133,13 +133,13 @@ class TestSuite(unittest.TestCase):
         yak = Yak('auth_token', {})
         self.assertEqual(yak._comments_list, [])
 
-    @mock.patch('yak.Comment')
+    @mock.patch('yikyakapi.yak.Comment')
     def test_comments_list_setter(self, mock_comment):
         yak = Yak('auth_token', {})
         yak.comments_list = range(10)
         self.assertEqual(len(yak._comments_list), 10)
 
-    @mock.patch('yak.Yak._retrieve_comments')
+    @mock.patch('yikyakapi.yak.Yak._retrieve_comments')
     def test_comments_list_getter_no_request(self, mock_retrieve):
         """
         Get the comments list without making a request
@@ -152,7 +152,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(comments, ['a', 'b', 'c'])
         self.assertFalse(mock_retrieve.called)
 
-    @mock.patch('yak.Yak._request')
+    @mock.patch('yikyakapi.yak.Yak._request')
     def test_retrieve_comments(self, mock_request):
         """Assert ._retrieve_comments() makes the correct API call"""
         yak = Yak('auth_token', {})
@@ -178,7 +178,7 @@ class TestSuite(unittest.TestCase):
         yak_str = yak.__str__()
         self.assertEqual(type(yak_str), str)
 
-    @mock.patch('yak.Yak._request')
+    @mock.patch('yikyakapi.yak.Yak._request')
     def test_compose_comment(self, mock_request):
         """
         Assert composing a comment makes the correct API call
@@ -201,7 +201,7 @@ class TestSuite(unittest.TestCase):
         # Check returned comment
         self.assertTrue(isinstance(comment, Comment))
 
-    @mock.patch('yak.Yak._request')
+    @mock.patch('yikyakapi.yak.Yak._request')
     def test_compose_comment_with_handle(self, mock_request):
         """
         Assert composing a comment makes the correct API call

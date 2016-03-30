@@ -1,11 +1,11 @@
 import unittest
 from unittest import mock
 
-from yakker import *
+from yikyakapi.yakker import *
 
 
 class TestSuite(unittest.TestCase):
-    @mock.patch('yikyak.Yakker._request')
+    @mock.patch('yikyakapi.yikyak.Yakker._request')
     def test_construction(self, mock_request):
         data = {
             'myHerd': {},
@@ -21,7 +21,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yakker.userID, data['userID'])
         self.assertEqual(yakker.yakarma, data['yakarma'])
 
-    @mock.patch('yikyak.Yakker._request')
+    @mock.patch('yikyakapi.yikyak.Yakker._request')
     def test_construction_defaults(self, mock_request):
         yakker = Yakker('auth_token', {})
         self.assertEqual(yakker.herd, None)
