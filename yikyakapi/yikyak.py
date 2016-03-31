@@ -135,6 +135,46 @@ class YikYak(WebObject):
         url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
         return self._get_yaks(url, latitude, longitude)
 
+    def get_my_hot_yaks(self):
+        """
+        Retrieve hot Yaks from user's post history
+
+        Returns:
+            List of Yak objects
+        """
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/hot'
+        return self._get_yaks(url)
+
+    def get_my_new_yaks(self):
+        """
+        Retrieve new Yaks from user's post history
+
+        Returns:
+            List of Yak objects
+        """
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/new'
+        return self._get_yaks(url)
+
+    def get_my_hot_replies(self):
+        """
+        Retrieve hot Yaks from user's comment history
+
+        Returns:
+            List of Yak objects
+        """
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/hot'
+        return self._get_yaks(url)
+
+    def get_my_new_replies(self):
+        """
+        Retrieve new Yaks from user's comment history
+
+        Returns:
+            List of Yak objects
+        """
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/new'
+        return self._get_yaks(url)
+
     def compose_yak(self, message, latitude, longitude, handle=False):
         """
         Compose a new Yak at a co-ordinate

@@ -118,6 +118,38 @@ class TestSuite(unittest.TestCase):
         url = 'https://www.yikyak.com/api/proxy/v1/messages/all/new'
         mock_get.assert_called_with(url, 12.34, 56.78)
 
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_my_hot_yaks(self, mock_get):
+        client = YikYak()
+        client.get_my_hot_yaks()
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/hot'
+        mock_get.assert_called_with(url)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_my_new_yaks(self, mock_get):
+        client = YikYak()
+        client.get_my_new_yaks()
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/new'
+        mock_get.assert_called_with(url)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_my_new_replies(self, mock_get):
+        client = YikYak()
+        client.get_my_new_replies()
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/new'
+        mock_get.assert_called_with(url)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_my_hot_replies(self, mock_get):
+        client = YikYak()
+        client.get_my_hot_replies()
+
+        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/hot'
+        mock_get.assert_called_with(url)
+
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_compose_yak(self, mock_request):
         """
