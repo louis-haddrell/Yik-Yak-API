@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from yikyakapi.yak import Message
+from yikyakapi.message import Message
 
 
 class TestSuite(unittest.TestCase):
