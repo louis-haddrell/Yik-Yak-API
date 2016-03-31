@@ -77,22 +77,21 @@ class YikYak(WebObject):
         response = self._request('POST', url, json=json)
         return response
 
-    def _get_yaks(self, feed, latitude, longitude):
+    def _get_yaks(self, url, latitude=0, longitude=0):
         """
-        Internal function to retrieve Yaks from a location
+        Retrieve Yaks from a URL
+
+        Latitude and longitude will only affect Yak retrieval when searching
+        based on location
 
         Arguments:
-            feed (string): hot or new
-            latitude (float): latitude co-ordinate
-            longitude (float): longitude co-ordinate
+            url (string): Yak feed
+            *latitude (number): latitude co-ordinate
+            *longitude (number): longitude co-ordinate
 
         Returns:
             List of Yak objects from the feed
         """
-        assert feed in ['hot', 'new']
-
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/' + feed
-
         params = {
             'userLat': latitude,
             'userLong': longitude,
@@ -107,7 +106,7 @@ class YikYak(WebObject):
         yaks = [Yak(self.auth_token, data) for data in response]
         return yaks
 
-    def get_new(self, latitude, longitude):
+    def get_new_yaks(self, latitude, longitude):
         """
         Retrieve new Yaks from a location
 
@@ -118,9 +117,11 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        return self._get_yaks('new', latitude, longitude)
 
-    def get_hot(self, latitude, longitude):
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/new'
+        return self._get_yaks(url, latitude, longitude)
+
+    def get_hot_yaks(self, latitude, longitude):
         """
         Retrieve hot Yaks from a location
 
@@ -131,7 +132,8 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        return self._get_yaks('hot', latitude, longitude)
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
+        return self._get_yaks(url, latitude, longitude)
 
     def compose_yak(self, message, latitude, longitude, handle=False):
         """
@@ -180,10 +182,7 @@ class YikYak(WebObject):
         Claim a handle
 
         Arguments:
-            handle (string): handle to check
-
-        Returns:
-            Boolean representing availability
+            handle (string): handle to claim
         """
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
         json = {

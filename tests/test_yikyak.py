@@ -64,26 +64,59 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(client.auth_token, "auth_token")
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
 
-    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
-    def test_get_hot(self, mock_get):
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test_get_yaks(self, mock_request):
+        mock_request.return_value = []
+
         client = YikYak()
-        client.get_hot(1, 2)
-        mock_get.assert_called_with('hot', 1, 2)
+        client._get_yaks('https://www.yikyak.com/')
+
+        # Expected request
+        url = 'https://www.yikyak.com/'
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+            'lat': 0,
+            'long': 0,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('GET', url, params=params)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test_get_yaks_coords(self, mock_request):
+        mock_request.return_value = []
+
+        client = YikYak()
+        client._get_yaks('https://www.yikyak.com/', 50.93, -1.76)
+
+        # Expected request
+        url = 'https://www.yikyak.com/'
+        params = {
+            'userLat': 50.93,
+            'userLong': -1.76,
+            'lat': 50.93,
+            'long': -1.76,
+            'myHerd': 0,
+        }
+
+        mock_request.assert_called_with('GET', url, params=params)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
-    def test_get_new(self, mock_get):
+    def test_get_hot_yaks(self, mock_get):
         client = YikYak()
-        client.get_new(1, 2)
-        mock_get.assert_called_with('new', 1, 2)
+        client.get_hot_yaks(12.34, 56.78)
 
-    def test_get_yaks_invalid(self):
-        """
-        Assert YikYak._get_yaks() throws an AssertionError if we attempt to
-        retrieve from a feed that is not 'hot' or 'new'
-        """
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
+        mock_get.assert_called_with(url, 12.34, 56.78)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_new_yaks(self, mock_get):
         client = YikYak()
-        with self.assertRaises(AssertionError):
-            client._get_yaks('abcd', 1, 2)
+        client.get_new_yaks(12.34, 56.78)
+
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/new'
+        mock_get.assert_called_with(url, 12.34, 56.78)
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_compose_yak(self, mock_request):
@@ -134,25 +167,6 @@ class TestSuite(unittest.TestCase):
         yak = client.compose_yak("Hello World", 50.93, -1.76, handle=True)
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
-
-    @mock.patch('yikyakapi.yikyak.YikYak._request')
-    def test_get_yaks(self, mock_request):
-        mock_request.return_value = []
-
-        client = YikYak()
-        client._get_yaks('hot', 50.93, -1.76)
-
-        # Expected request
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
-        params = {
-            'userLat': 50.93,
-            'userLong': -1.76,
-            'lat': 50.93,
-            'long': -1.76,
-            'myHerd': 0,
-        }
-
-        mock_request.assert_called_with('GET', url, params=params)
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_check_handle_availability_available(self, mock_request):
