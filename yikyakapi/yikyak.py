@@ -1,3 +1,5 @@
+import urllib.parse
+
 from .web import WebObject
 from .yak import Yak
 from .yakker import Yakker
@@ -174,6 +176,27 @@ class YikYak(WebObject):
         """
         url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/new'
         return self._get_yaks(url)
+
+    def get_yak(self, yak_id):
+        """
+        Retrieve a Yak by ID
+
+        Arguments:
+            yak_id (string): ID of Yak to retrieve
+
+        Returns:
+            Yak object
+        """
+        urlsafe_id = urllib.parse.quote_plus(yak_id)
+        url = "https://www.yikyak.com/api/proxy/v1/messages/{}"
+        url = url.format(urlsafe_id)
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+
+        data = self._request('GET', url, params=params)
+        return Yak(self.auth_token, data)
 
     def compose_yak(self, message, latitude, longitude, handle=False):
         """

@@ -262,3 +262,24 @@ class TestSuite(unittest.TestCase):
             'handle': 'YikYakBot',
         }
         mock_request.assert_called_with('POST', url, json=json)
+
+    @mock.patch('yikyakapi.yikyak.Yak')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test_get_yak(self, mock_request, mock_yak):
+        mock_request.return_value = {'mock': 'data'}
+        mock_yak.return_value = mock.Mock()
+
+        client = YikYak()
+        client.auth_token = 'auth_token'
+
+        yak = client.get_yak('R/abcd')
+
+        url = "https://www.yikyak.com/api/proxy/v1/messages/R%2Fabcd"
+        params = {
+            'userLat': 0,
+            'userLong': 0,
+        }
+
+        mock_request.assert_called_with('GET', url, params=params)
+        mock_yak.assert_called_with('auth_token', mock_request.return_value)
+        self.assertEqual(yak, mock_yak.return_value)
