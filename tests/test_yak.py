@@ -162,7 +162,7 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = ['a', 'b', 'c']
 
         # Expected request
-        url = 'https://yikyak.com/api/proxy/v1/messages/R%2Fabc/comments'
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/R%2Fabc/comments'
         params = {
             'userLat': 0,
             'userLong': 0,

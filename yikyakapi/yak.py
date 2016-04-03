@@ -72,7 +72,7 @@ class Yak(Message):
 
     @property
     def message_url(self):
-        url = 'https://yikyak.com/api/proxy/v1/messages/{}/'
+        url = 'https://www.yikyak.com/api/proxy/v1/messages/{}/'
         # Convert / to %2F
         urlsafe_id = urllib.parse.quote_plus(self.message_id)
         return url.format(urlsafe_id)
