@@ -22,6 +22,8 @@ class YikYak(WebObject):
         """
         Login to YikYak and get our auth token
 
+        See documentation for country codes
+
         Arguments:
             country_code (string): country code
             phone_number (string): phone number
