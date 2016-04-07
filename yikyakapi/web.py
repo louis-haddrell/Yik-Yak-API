@@ -58,5 +58,5 @@ class WebObject(object):
         """
         Refresh the auth token
         """
-        url = 'https://yikyak.com/api/auth/token/refresh'
+        url = 'https://www.yikyak.com/api/auth/token/refresh'
         self.auth_token = self._request('POST', url)

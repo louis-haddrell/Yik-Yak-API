@@ -52,5 +52,5 @@ class TestSuite(unittest.TestCase):
 
         self.assertEqual(web.auth_token, 'new_token')
 
-        url = 'https://yikyak.com/api/auth/token/refresh'
+        url = 'https://www.yikyak.com/api/auth/token/refresh'
         mock_request.assert_called_with('POST', url)
