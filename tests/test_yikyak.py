@@ -167,36 +167,11 @@ class TestSuite(unittest.TestCase):
             'userLong': 0,
         }
         json = {
-            'handle': False,
-            'message': 'Hello World',
-        }
-
-        yak = client.compose_yak("Hello World", 50.93, -1.76)
-        self.assertTrue(isinstance(yak, Yak))
-        mock_request.assert_called_with('POST', url, params=params, json=json)
-
-    @mock.patch('yikyakapi.yikyak.YikYak._request')
-    def test_compose_yak_with_handle(self, mock_request):
-        """
-        Assert YikYak.compose_yak() makes the correct API call
-        """
-        client = YikYak()
-
-        # Expected request
-        url = "https://www.yikyak.com/api/proxy/v1/messages"
-        params = {
-            'lat': 50.93,
-            'long': -1.76,
-            'myHerd': 0,
-            'userLat': 0,
-            'userLong': 0,
-        }
-        json = {
             'handle': True,
             'message': 'Hello World',
         }
 
-        yak = client.compose_yak("Hello World", 50.93, -1.76, handle=True)
+        yak = client.compose_yak("Hello World", 50.93, -1.76)
         self.assertTrue(isinstance(yak, Yak))
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
