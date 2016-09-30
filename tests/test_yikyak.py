@@ -49,6 +49,17 @@ class TestSuite(unittest.TestCase):
 
         mock_request.assert_called_with('POST', url, json=json)
 
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test_pair_yakker(self, mock_request):
+        """Cached yakker should be cleared on loging"""
+        client = YikYak()
+        client._yakker = mock.Mock()
+
+        client.pair("GBR", "1234567890", "123456")
+
+        self.assertEqual(client._yakker, None)
+
+
     @mock.patch('yikyakapi.yikyak.YikYak.pair')
     def test_login(self, mock_pair):
         """

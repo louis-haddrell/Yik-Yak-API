@@ -79,6 +79,7 @@ class YikYak(WebObject):
         }
 
         response = self._request('POST', url, json=json)
+        self._yakker = None
         return response
 
     def _get_yaks(self, url, latitude=0, longitude=0):
