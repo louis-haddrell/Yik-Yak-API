@@ -64,6 +64,17 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(client.auth_token, "auth_token")
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
 
+    @mock.patch('yikyakapi.yikyak.YikYak.init_pairing')
+    @mock.patch('yikyakapi.yikyak.YikYak.pair')
+    def test_login_id(self, mock_pair, mock_init_pairing):
+        mock_init_pairing.return_value = "123456"
+
+        client = YikYak()
+        client.login_id("GBR", "1234567890", "ABCDEFG")
+
+        mock_init_pairing.assert_called_with("ABCDEFG")
+        mock_pair.assert_called_with("GBR", "1234567890", "123456")
+
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_get_yaks(self, mock_request):
         mock_request.return_value = []
