@@ -6,6 +6,11 @@ from yikyakapi.web import *
 
 
 class TestSuite(unittest.TestCase):
+    def test_base_url(self):
+        """WebObject should include the base URL variable"""
+        web = WebObject()
+        self.assertEqual(web.base_url, "https://www.yikyak.com/api/v2/")
+
     @mock.patch('yikyakapi.web.requests.request')
     def test_request_headers(self, mock_request):
         """Assert standard headers are sent in the request"""

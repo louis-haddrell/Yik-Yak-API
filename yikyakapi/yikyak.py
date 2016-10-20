@@ -123,7 +123,7 @@ class YikYak(WebObject):
             List of Yak objects
         """
 
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/new'
+        url = self.base_url + 'messages/all/new'
         return self._get_yaks(url, latitude, longitude)
 
     def get_hot_yaks(self, latitude, longitude):
@@ -137,7 +137,7 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
+        url = self.base_url + 'messages/all/hot'
         return self._get_yaks(url, latitude, longitude)
 
     def get_my_hot_yaks(self):
@@ -147,7 +147,7 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/hot'
+        url = self.base_url + 'yakker/history/yaks/hot'
         return self._get_yaks(url)
 
     def get_my_new_yaks(self):
@@ -157,7 +157,7 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/new'
+        url = self.base_url + 'yakker/history/yaks/new'
         return self._get_yaks(url)
 
     def get_my_hot_replies(self):
@@ -167,7 +167,7 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/hot'
+        url = self.base_url + 'yakker/history/replies/hot'
         return self._get_yaks(url)
 
     def get_my_new_replies(self):
@@ -177,7 +177,7 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/new'
+        url = self.base_url + 'yakker/history/replies/new'
         return self._get_yaks(url)
 
     def get_yak(self, yak_id):
@@ -191,7 +191,7 @@ class YikYak(WebObject):
             Yak object
         """
         urlsafe_id = urllib.parse.quote_plus(yak_id)
-        url = "https://www.yikyak.com/api/proxy/v1/messages/{}"
+        url = self.base_url + "messages/{}"
         url = url.format(urlsafe_id)
         params = {
             'userLat': 0,
@@ -210,7 +210,7 @@ class YikYak(WebObject):
             latitude (float): location latitude
             longitude (float): location longitude
         """
-        url = "https://www.yikyak.com/api/proxy/v1/messages"
+        url = self.base_url + 'messages'
         params = {
             'lat': latitude,
             'long': longitude,
@@ -236,7 +236,7 @@ class YikYak(WebObject):
         Returns:
             Boolean representing availability
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        url = self.base_url + 'yakker/handles'
         params = {
             'handle': handle,
         }
@@ -250,7 +250,7 @@ class YikYak(WebObject):
         Arguments:
             handle (string): handle to claim
         """
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        url = self.base_url + 'yakker/handles'
         json = {
             'handle': handle,
         }

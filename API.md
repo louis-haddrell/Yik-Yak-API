@@ -356,7 +356,7 @@ For all authenticated operations, the following headers must be sent:
 
 
 ###Yakker
-`GET https://www.yikyak.com/api/proxy/v1/yakker`  
+`GET https://www.yikyak.com/api/v2/yakker`  
 
 **Response**
 ```
@@ -379,8 +379,8 @@ For all authenticated operations, the following headers must be sent:
 ```
 
 ###New / Hot Yak Feed
-`GET https://www.yikyak.com/api/proxy/v1/messages/all/new`  
-`GET https://www.yikyak.com/api/proxy/v1/messages/all/hot`  
+`GET https://www.yikyak.com/api/v2/messages/all/new`  
+`GET https://www.yikyak.com/api/v2/messages/all/hot`  
 
 **Query String**
 ```
@@ -396,7 +396,7 @@ long=<longitude>
 Returns up to 200(?) Yak objects
 
 ###Compose a Yak
-`POST https://www.yikyak.com/api/proxy/v1/messages`
+`POST https://www.yikyak.com/api/v2/messages`
 
 ####Request Parameters
 |Key|Value Type|Description
@@ -417,7 +417,7 @@ Returns up to 200(?) Yak objects
 > `handle` is currently optional and defaults to `false`
 
 ###Yak Details
-`GET https://www.yikyak.com/api/proxy/v1/messages/<yak_id>`
+`GET https://www.yikyak.com/api/v2/messages/<yak_id>`
 
 > **Note**
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
@@ -436,8 +436,8 @@ Returns a JSON Yak object (see above)
 
 ###Voting on a Yak
 
-`PUT https://www.yikyak.com/api/proxy/v1/messages/<yak_id>/upvote`  
-`PUT https://www.yikyak.com/api/proxy/v1/messages/<yak_id>/downvote`  
+`PUT https://www.yikyak.com/api/v2/messages/<yak_id>/upvote`  
+`PUT https://www.yikyak.com/api/v2/messages/<yak_id>/downvote`  
 
 > **Note**
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
@@ -454,7 +454,7 @@ userLong=0.0
 JSON parse fails on the response. Probably a malformed Yak object.
 
 ###Delete a Yak
-`DELETE https://www.yikyak.com/api/proxy/v1/messages/<yak_id>`
+`DELETE https://www.yikyak.com/api/v2/messages/<yak_id>`
 
 > **Note**
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
@@ -468,7 +468,7 @@ userLong=0.0
 ```
 
 ###Report a Yak
-`PUT https://www.yikyak.com/api/proxy/v1/messages/<yak_id>/report`
+`PUT https://www.yikyak.com/api/v2/messages/<yak_id>/report`
 
 > **Note**
 > The `/` in the Yak's ID must be made URL-safe i.e. converted to `%2F`
@@ -494,7 +494,7 @@ Selecting to block the poster of a Yak will prevent you from ever seeing their Y
 Reason must be one of the following: `Offensive`, `Other`, `Spam`, `Targeting`
 
 ###Check Handle Availability
-`GET https://www.yikyak.com/api/proxy/v1/yakker/handles`
+`GET https://www.yikyak.com/api/v2/yakker/handles`
 
 ####Request Parameters
 |Key|Value Type|Description
@@ -507,7 +507,7 @@ Reason must be one of the following: `Offensive`, `Other`, `Spam`, `Targeting`
 |`code`|int|`0` success; `1` invalid; `2` taken
 
 ###Claim Handle
-`POST https://www.yikyak.com/api/proxy/v1/yakker/handles`
+`POST https://www.yikyak.com/api/v2/yakker/handles`
 
 ####Request Body
 |Key|Value Type|Description

@@ -10,6 +10,8 @@ class Message(WebObject):
     """
 
     def __init__(self):
+        super().__init__()
+
         self.params = {
             'userLat': 0,
             'userLong': 0,

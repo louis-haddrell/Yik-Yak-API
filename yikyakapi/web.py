@@ -8,6 +8,7 @@ from json.decoder import JSONDecodeError
 class WebObject(object):
     def __init__(self):
         self.auth_token = None
+        self.base_url = "https://www.yikyak.com/api/v2/"
 
     def _request(self, method, url, **kwargs):
         """

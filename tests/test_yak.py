@@ -46,6 +46,7 @@ class TestSuite(unittest.TestCase):
 
     def test_yak_construction(self):
         yak = Yak('auth_token', self.img_data)
+        self.assertEqual(yak.base_url, "https://www.yikyak.com/api/v2/")
         self.assertEqual(yak.auth_token, 'auth_token')
         self.assertEqual(yak.can_downvote, self.img_data['canDownVote'])
         self.assertEqual(yak.can_reply, self.img_data['canReply'])
@@ -81,6 +82,7 @@ class TestSuite(unittest.TestCase):
 
     def test_yak_defaults(self):
         yak = Yak('auth_token', {})
+        self.assertEqual(yak.base_url, "https://www.yikyak.com/api/v2/")
         self.assertEqual(yak.can_downvote, False)
         self.assertEqual(yak.can_reply, False)
         self.assertEqual(yak.can_report, 0)
@@ -162,7 +164,7 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = ['a', 'b', 'c']
 
         # Expected request
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/R%2Fabc/comments'
+        url = 'https://www.yikyak.com/api/v2/messages/R%2Fabc/comments'
         params = {
             'userLat': 0,
             'userLong': 0,

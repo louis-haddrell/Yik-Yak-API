@@ -129,7 +129,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.get_hot_yaks(12.34, 56.78)
 
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/hot'
+        url = 'https://www.yikyak.com/api/v2/messages/all/hot'
         mock_get.assert_called_with(url, 12.34, 56.78)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
@@ -137,7 +137,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.get_new_yaks(12.34, 56.78)
 
-        url = 'https://www.yikyak.com/api/proxy/v1/messages/all/new'
+        url = 'https://www.yikyak.com/api/v2/messages/all/new'
         mock_get.assert_called_with(url, 12.34, 56.78)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
@@ -145,7 +145,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.get_my_hot_yaks()
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/hot'
+        url = 'https://www.yikyak.com/api/v2/yakker/history/yaks/hot'
         mock_get.assert_called_with(url)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
@@ -153,7 +153,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.get_my_new_yaks()
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/yaks/new'
+        url = 'https://www.yikyak.com/api/v2/yakker/history/yaks/new'
         mock_get.assert_called_with(url)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
@@ -161,7 +161,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.get_my_new_replies()
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/new'
+        url = 'https://www.yikyak.com/api/v2/yakker/history/replies/new'
         mock_get.assert_called_with(url)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
@@ -169,7 +169,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.get_my_hot_replies()
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/history/replies/hot'
+        url = 'https://www.yikyak.com/api/v2/yakker/history/replies/hot'
         mock_get.assert_called_with(url)
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
@@ -180,7 +180,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
 
         # Expected request
-        url = "https://www.yikyak.com/api/proxy/v1/messages"
+        url = "https://www.yikyak.com/api/v2/messages"
         params = {
             'lat': 50.93,
             'long': -1.76,
@@ -207,7 +207,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         result = client.check_handle_availability('available')
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        url = 'https://www.yikyak.com/api/v2/yakker/handles'
         params = {
             'handle': 'available',
         }
@@ -224,7 +224,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         result = client.check_handle_availability('invalid')
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        url = 'https://www.yikyak.com/api/v2/yakker/handles'
         params = {
             'handle': 'invalid',
         }
@@ -241,7 +241,7 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         result = client.check_handle_availability('unavailable')
 
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        url = 'https://www.yikyak.com/api/v2/yakker/handles'
         params = {
             'handle': 'unavailable',
         }
@@ -254,7 +254,7 @@ class TestSuite(unittest.TestCase):
 
         client = YikYak()
         client.claim_handle('YikYakBot')
-        url = 'https://www.yikyak.com/api/proxy/v1/yakker/handles'
+        url = 'https://www.yikyak.com/api/v2/yakker/handles'
         json = {
             'handle': 'YikYakBot',
         }
@@ -271,7 +271,7 @@ class TestSuite(unittest.TestCase):
 
         yak = client.get_yak('R/abcd')
 
-        url = "https://www.yikyak.com/api/proxy/v1/messages/R%2Fabcd"
+        url = "https://www.yikyak.com/api/v2/messages/R%2Fabcd"
         params = {
             'userLat': 0,
             'userLong': 0,

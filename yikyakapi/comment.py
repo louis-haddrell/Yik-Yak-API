@@ -25,7 +25,7 @@ class Comment(Message):
 
     @property
     def message_url(self):
-        url = 'https://yikyak.com/api/proxy/v1/messages/{}/comments/{}/'
+        url = self.base_url + 'messages/{}/comments/{}/'
         # Convert / to %2F
         message_id = urllib.parse.quote_plus(self.message_id)
         comment_id = urllib.parse.quote_plus(self.comment_id)

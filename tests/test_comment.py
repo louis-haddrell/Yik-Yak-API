@@ -25,6 +25,7 @@ class TestSuite(unittest.TestCase):
         comment = Comment('auth_token', data)
 
         self.assertEqual(comment.auth_token, 'auth_token')
+        self.assertEqual(comment.base_url, 'https://www.yikyak.com/api/v2/')
 
         self.assertEqual(comment.back_id, data['backID'])
         self.assertEqual(comment.comment, data['comment'])
@@ -45,6 +46,7 @@ class TestSuite(unittest.TestCase):
         comment = Comment('auth_token', {})
 
         self.assertEqual(comment.auth_token, 'auth_token')
+        self.assertEqual(comment.base_url, 'https://www.yikyak.com/api/v2/')
 
         self.assertEqual(comment.back_id, '')
         self.assertEqual(comment.comment, '')
@@ -65,7 +67,7 @@ class TestSuite(unittest.TestCase):
         comment = Comment('auth_token', {})
         comment.message_id = 'R/1234'
         comment.comment_id = 'R/abcd'
-        expected = 'https://yikyak.com/api/proxy/v1/messages/R%2F1234/comments/R%2Fabcd/'
+        expected = 'https://www.yikyak.com/api/v2/messages/R%2F1234/comments/R%2Fabcd/'
         self.assertEqual(comment.message_url, expected)
 
     def test_str(self):
