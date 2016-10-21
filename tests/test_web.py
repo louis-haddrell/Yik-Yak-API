@@ -11,6 +11,10 @@ class TestSuite(unittest.TestCase):
         web = WebObject()
         self.assertEqual(web.base_url, "https://www.yikyak.com/api/v2/")
 
+    def test_session(self):
+        web = WebObject()
+        self.assertEqual(web.session.headers['Referer'], 'https://yikyak.com')
+
     @mock.patch('yikyakapi.web.requests.request')
     def test_request_headers(self, mock_request):
         """Assert standard headers are sent in the request"""

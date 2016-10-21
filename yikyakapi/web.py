@@ -10,6 +10,9 @@ class WebObject(object):
         self.auth_token = None
         self.base_url = "https://www.yikyak.com/api/v2/"
 
+        self.session = requests.Session()
+        self.session.headers.update({'Referer': 'https://yikyak.com'})
+
     def _request(self, method, url, **kwargs):
         """
         Wrapper for requests.request()
