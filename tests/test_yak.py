@@ -202,29 +202,6 @@ class TestSuite(unittest.TestCase):
             'userLong': 0,
         }
         json = {
-            'handle': False,
-            'comment': 'Hello world',
-        }
-        mock_request.assert_called_with('POST', url, params=params, json=json)
-
-        # Check returned comment
-        self.assertTrue(isinstance(comment, Comment))
-
-    @mock.patch('yikyakapi.yak.Yak._request')
-    def test_compose_comment_with_handle(self, mock_request):
-        """
-        Assert composing a comment makes the correct API call
-        """
-        yak = Yak(mock.Mock(), {})
-        comment = yak.compose_comment('Hello world', handle=True)
-
-        # Expected API call
-        url = yak.message_url + 'comments'
-        params = {
-            'userLat': 0,
-            'userLong': 0,
-        }
-        json = {
             'handle': True,
             'comment': 'Hello world',
         }
