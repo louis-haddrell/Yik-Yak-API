@@ -72,8 +72,8 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
         client.login("GBR", "1234567890", "123456")
 
-        self.assertEqual(client.auth_token, "auth_token")
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
+        self.assertEqual(client.auth_token, "auth_token")
 
     @mock.patch('yikyakapi.yikyak.YikYak.init_pairing')
     @mock.patch('yikyakapi.yikyak.YikYak.pair')
@@ -87,7 +87,7 @@ class TestSuite(unittest.TestCase):
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
-    def test_get_yaks(self, mock_request):
+    def test__get_yaks(self, mock_request):
         mock_request.return_value = []
 
         client = YikYak()
@@ -106,7 +106,7 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
-    def test_get_yaks_coords(self, mock_request):
+    def test__get_yaks_coords(self, mock_request):
         mock_request.return_value = []
 
         client = YikYak()
@@ -125,20 +125,18 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
-    def test_get_hot_yaks(self, mock_get):
-        client = YikYak()
-        client.get_hot_yaks(12.34, 56.78)
-
-        url = 'https://www.yikyak.com/api/v2/messages/all/hot'
-        mock_get.assert_called_with(url, 12.34, 56.78)
-
-    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
     def test_get_new_yaks(self, mock_get):
         client = YikYak()
         client.get_new_yaks(12.34, 56.78)
 
-        url = 'https://www.yikyak.com/api/v2/messages/all/new'
+        url = 'https://www.yikyak.com/api/v2/messages'
         mock_get.assert_called_with(url, 12.34, 56.78)
+
+    def test_get_hot_yaks(self):
+        client = YikYak()
+
+        with self.assertRaises(NotImplementedError):
+            client.get_hot_yaks(12.34, 56.78)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
     def test_get_my_hot_yaks(self, mock_get):

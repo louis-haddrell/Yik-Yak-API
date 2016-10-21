@@ -1,3 +1,4 @@
+import warnings
 import urllib.parse
 
 from .web import WebObject
@@ -122,23 +123,12 @@ class YikYak(WebObject):
         Returns:
             List of Yak objects
         """
-
-        url = self.base_url + 'messages/all/new'
+        url = self.base_url + 'messages'
         return self._get_yaks(url, latitude, longitude)
 
     def get_hot_yaks(self, latitude, longitude):
-        """
-        Retrieve hot Yaks from a location
-
-        Arguments:
-            latitude (float): location latitude
-            longitude (float): location longitude
-
-        Returns:
-            List of Yak objects
-        """
-        url = self.base_url + 'messages/all/hot'
-        return self._get_yaks(url, latitude, longitude)
+        """The hot feed functionality has been removed in API V2"""
+        raise NotImplementedError("Removed in API V2")
 
     def get_my_hot_yaks(self):
         """
