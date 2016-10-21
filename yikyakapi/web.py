@@ -48,4 +48,5 @@ class WebObject(object):
         Refresh the auth token
         """
         url = 'https://www.yikyak.com/api/auth/token/refresh'
-        self.auth_token = self._request('POST', url)
+        auth_token = self._request('POST', url)
+        self.session.headers.update({'x-access-token': auth_token})

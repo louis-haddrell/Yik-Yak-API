@@ -48,10 +48,9 @@ class TestSuite(unittest.TestCase):
         mock_request.return_value = 'new_token'
 
         web = WebObject()
-        web.auth_token = 'old_token'
         web.refresh_token()
-
-        self.assertEqual(web.auth_token, 'new_token')
 
         url = 'https://www.yikyak.com/api/auth/token/refresh'
         mock_request.assert_called_with('POST', url)
+
+        self.assertEqual(web.session.headers['x-access-token'], 'new_token')
