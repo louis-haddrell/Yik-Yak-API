@@ -30,7 +30,8 @@ class YikYak(WebObject):
             phone_number (string): phone number
             user_id (string): authentication PIN from app
         """
-        self.auth_token = self.pair(country_code, phone_number, pin)
+        auth_token = self.pair(country_code, phone_number, pin)
+        self.session.headers.update({'x-access-token': auth_token})
 
     def login_id(self, country_code, phone_number, user_id):
         """
@@ -42,7 +43,7 @@ class YikYak(WebObject):
             user_id (string): YikYak user ID
         """
         pin = self.init_pairing(user_id)
-        self.auth_token = self.pair(country_code, phone_number, pin)
+        self.login(country_code, phone_number, pin)
 
     def init_pairing(self, user_id):
         """

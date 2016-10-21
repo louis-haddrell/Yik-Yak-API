@@ -67,24 +67,22 @@ class TestSuite(unittest.TestCase):
 
         Fail if the token is not assigned to YikYak.auth_token
         """
-        mock_pair.return_value = "auth_token"
+        mock_pair.return_value = "token"
 
         client = YikYak()
         client.login("GBR", "1234567890", "123456")
 
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
-        self.assertEqual(client.auth_token, "auth_token")
+        self.assertEqual(client.session.headers['x-access-token'], 'token')
 
     @mock.patch('yikyakapi.yikyak.YikYak.init_pairing')
-    @mock.patch('yikyakapi.yikyak.YikYak.pair')
-    def test_login_id(self, mock_pair, mock_init_pairing):
+    @mock.patch('yikyakapi.yikyak.YikYak.login')
+    def test_login_id(self, mock_login, mock_init_pairing):
         mock_init_pairing.return_value = "123456"
 
         client = YikYak()
         client.login_id("GBR", "1234567890", "ABCDEFG")
-
-        mock_init_pairing.assert_called_with("ABCDEFG")
-        mock_pair.assert_called_with("GBR", "1234567890", "123456")
+        mock_login.assert_called_with("GBR", "1234567890", "123456")
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test__get_yaks(self, mock_request):
