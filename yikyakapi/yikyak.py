@@ -1,3 +1,4 @@
+import re
 import warnings
 import urllib.parse
 
@@ -19,9 +20,15 @@ class YikYak(WebObject):
 
         return self._yakker
 
+    def get_csrf_token(self):
+        """Retrieve the CSRF token from a regular HTML view"""
+        response = self.session.get('https://www.yikyak.com/nearby')
+        pattern = re.compile('"csrfToken":"([\w\d-]+)"')
+        return re.search(pattern, response.text).group(1)
+
     def login(self, country_code, phone_number, pin):
         """
-        Login to YikYak and get our auth token
+        Login to YikYak and get our access and CSRF tokens
 
         See documentation for country codes
 
@@ -30,8 +37,12 @@ class YikYak(WebObject):
             phone_number (string): phone number
             user_id (string): authentication PIN from app
         """
-        token = self.pair(country_code, phone_number, pin)
-        self.session.headers.update({'x-access-token': token})
+        access_token = self.pair(country_code, phone_number, pin)
+        csrf_token = self.get_csrf_token()
+        self.session.headers.update({
+            'x-access-token': access_token,
+            'X-Csrf-Token': csrf_token,
+        })
 
     def login_id(self, country_code, phone_number, user_id):
         """

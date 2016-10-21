@@ -59,17 +59,39 @@ class TestSuite(unittest.TestCase):
 
         self.assertEqual(client._yakker, None)
 
-
+    @mock.patch('yikyakapi.yikyak.YikYak.get_csrf_token')
     @mock.patch('yikyakapi.yikyak.YikYak.pair')
-    def test_login(self, mock_pair):
-        """Assert .login() retrieves the auth token"""
-        mock_pair.return_value = "token"
+    def test_login(self, mock_pair, mock_csrf):
+        """Assert .login() retrieves the access token and CSRF token"""
+        mock_pair.return_value = "access_token"
+        mock_csrf.return_value = "csrf_token"
 
         client = YikYak()
-        client.login("GBR", "1234567890", "123456")
+        client.session = mock.Mock()
 
+        # Assert .pair() is called
+        client.login("GBR", "1234567890", "123456")
         mock_pair.assert_called_with("GBR", "1234567890", "123456")
-        self.assertEqual(client.session.headers['x-access-token'], 'token')
+        mock_csrf.assert_called_with()
+
+        headers = {
+            'x-access-token': 'access_token',
+            'X-Csrf-Token': 'csrf_token',
+        }
+        client.session.headers.update.assert_called_with(headers)
+
+    def test_get_csrf_token(self):
+        client = YikYak()
+
+        html = "\"csrfToken\":\"ekyJ0Oht-HaDXAMs6fd_H1Qz-E7GZvNkAzS0\""
+        response = mock.Mock()
+        response.text = html
+
+        client.session = mock.Mock()
+        client.session.get.return_value = response
+
+        token = client.get_csrf_token()
+        self.assertEqual(token, 'ekyJ0Oht-HaDXAMs6fd_H1Qz-E7GZvNkAzS0')
 
     @mock.patch('yikyakapi.yikyak.YikYak.init_pairing')
     @mock.patch('yikyakapi.yikyak.YikYak.login')
