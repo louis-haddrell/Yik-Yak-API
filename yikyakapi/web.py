@@ -27,26 +27,11 @@ class WebObject(object):
             url (string): URL to make the request to
             **kwargs: any kwargs allowed by requests.request()
         """
-        # Standard auth headers
-        auth_headers = {
-            'Referer': 'https://yikyak.com/',
-            'x-access-token': self.auth_token,
-        }
-
-        # Retrieve custom headers (if any) from kwargs
-        headers = kwargs.get('headers', {})
-
-        # Give custom headers priority
-        auth_headers.update(headers)
-
-        # Place back in kwargs
-        kwargs['headers'] = auth_headers
-
         logging.debug(method)
         logging.debug(url)
         logging.debug(kwargs)
 
-        response = requests.request(method, url, **kwargs)
+        response = self.session.request(method, url, **kwargs)
 
         try:
             json = response.json()
