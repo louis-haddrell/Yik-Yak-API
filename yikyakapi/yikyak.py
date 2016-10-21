@@ -142,45 +142,39 @@ class YikYak(WebObject):
         """The hot feed functionality has been removed in API V2"""
         raise NotImplementedError("Removed in API V2")
 
-    def get_my_hot_yaks(self):
-        """
-        Retrieve hot Yaks from user's post history
-
-        Returns:
-            List of Yak objects
-        """
-        url = self.base_url + 'yakker/history/yaks/hot'
-        return self._get_yaks(url)
-
-    def get_my_new_yaks(self):
+    def get_my_yaks(self):
         """
         Retrieve new Yaks from user's post history
 
         Returns:
             List of Yak objects
         """
-        url = self.base_url + 'yakker/history/yaks/new'
+        url = self.base_url + 'messages/myYaks'
         return self._get_yaks(url)
 
-    def get_my_hot_replies(self):
-        """
-        Retrieve hot Yaks from user's comment history
+    def get_my_new_yaks(self):
+        warnings.warn("Use get_my_yaks() instead", DeprecationWarning)
+        return self.get_my_yaks()
 
-        Returns:
-            List of Yak objects
-        """
-        url = self.base_url + 'yakker/history/replies/hot'
-        return self._get_yaks(url)
+    def get_my_hot_yaks(self):
+        raise NotImplementedError("Removed in API V2")
 
-    def get_my_new_replies(self):
+    def get_my_replies(self):
         """
         Retrieve new Yaks from user's comment history
 
         Returns:
             List of Yak objects
         """
-        url = self.base_url + 'yakker/history/replies/new'
+        url = self.base_url + 'messages/myReplies'
         return self._get_yaks(url)
+
+    def get_my_new_replies(self):
+        warnings.warn("Use get_my_replies() instead", DeprecationWarning)
+        return self.get_my_replies()
+
+    def get_my_hot_replies(self):
+        raise NotImplementedError("Removed in API V2")
 
     def get_yak(self, yak_id):
         """
@@ -217,8 +211,8 @@ class YikYak(WebObject):
             'lat': latitude,
             'long': longitude,
             'myHerd': 0,
-            'userLat': 0,
-            'userLong': 0,
+            'userLat': latitude,
+            'userLong': longitude,
         }
         json = {
             'handle': True,

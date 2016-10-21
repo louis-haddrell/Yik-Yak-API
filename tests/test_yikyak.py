@@ -155,36 +155,48 @@ class TestSuite(unittest.TestCase):
             client.get_hot_yaks(12.34, 56.78)
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
-    def test_get_my_hot_yaks(self, mock_get):
+    def test_get_my_yaks(self, mock_get):
         client = YikYak()
-        client.get_my_hot_yaks()
+        client.get_my_yaks()
 
-        url = 'https://www.yikyak.com/api/v2/yakker/history/yaks/hot'
+        url = 'https://www.yikyak.com/api/v2/messages/myYaks'
         mock_get.assert_called_with(url)
 
-    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    @mock.patch('yikyakapi.yikyak.YikYak.get_my_yaks')
     def test_get_my_new_yaks(self, mock_get):
         client = YikYak()
-        client.get_my_new_yaks()
 
-        url = 'https://www.yikyak.com/api/v2/yakker/history/yaks/new'
-        mock_get.assert_called_with(url)
+        with self.assertWarns(DeprecationWarning):
+            client.get_my_new_yaks()
+
+        mock_get.assert_called_with()
+
+    def test_get_my_hot_yaks(self):
+        client = YikYak()
+        with self.assertRaises(NotImplementedError):
+            client.get_my_hot_yaks()
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_my_replies(self, mock_get):
+        client = YikYak()
+        client.get_my_replies()
+
+        url = 'https://www.yikyak.com/api/v2/messages/myReplies'
+        mock_get.assert_called_with(url)
+
+    @mock.patch('yikyakapi.yikyak.YikYak.get_my_replies')
     def test_get_my_new_replies(self, mock_get):
         client = YikYak()
-        client.get_my_new_replies()
 
-        url = 'https://www.yikyak.com/api/v2/yakker/history/replies/new'
-        mock_get.assert_called_with(url)
+        with self.assertWarns(DeprecationWarning):
+            client.get_my_new_replies()
 
-    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
-    def test_get_my_hot_replies(self, mock_get):
+        mock_get.assert_called_with()
+
+    def test_get_my_hot_replies(self):
         client = YikYak()
-        client.get_my_hot_replies()
-
-        url = 'https://www.yikyak.com/api/v2/yakker/history/replies/hot'
-        mock_get.assert_called_with(url)
+        with self.assertRaises(NotImplementedError):
+            client.get_my_hot_replies()
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test_compose_yak(self, mock_request):
@@ -199,8 +211,8 @@ class TestSuite(unittest.TestCase):
             'lat': 50.93,
             'long': -1.76,
             'myHerd': 0,
-            'userLat': 0,
-            'userLong': 0,
+            'userLat': 50.93,
+            'userLong': -1.76,
         }
         json = {
             'handle': True,
