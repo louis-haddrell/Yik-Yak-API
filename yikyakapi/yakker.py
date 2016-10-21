@@ -2,8 +2,8 @@ from .web import WebObject
 
 
 class Yakker(WebObject):
-    def __init__(self, auth_token, data):
-        self.auth_token = auth_token
+    def __init__(self, session, data):
+        self.session = session
         self.herd = data.get('myHerd', None)
         self.nickname = data.get('nickname', None)
         self.userID = data.get('userID', None)
@@ -12,4 +12,4 @@ class Yakker(WebObject):
     def refresh(self):
         url = 'https://www.yikyak.com/api/proxy/v1/yakker'
         data = self._request('GET', url)
-        self.__init__(self.auth_token, data)
+        self.__init__(self.session, data)

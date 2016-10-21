@@ -33,11 +33,11 @@ class TestSuite(unittest.TestCase):
         client = YikYak()
 
         # Mock response
-        mock_request.return_value = 'auth_token'
+        mock_request.return_value = 'token'
 
         # Assert authentication token is returned
         token = client.pair('GBR', '1234567890', '123456')
-        self.assertEqual(token, 'auth_token')
+        self.assertEqual(token, 'token')
 
         # Assert API call is correct
         url = 'https://www.yikyak.com/api/auth/pair'
@@ -62,11 +62,7 @@ class TestSuite(unittest.TestCase):
 
     @mock.patch('yikyakapi.yikyak.YikYak.pair')
     def test_login(self, mock_pair):
-        """
-        Assert .login() grabs the auth token
-
-        Fail if the token is not assigned to YikYak.auth_token
-        """
+        """Assert .login() retrieves the auth token"""
         mock_pair.return_value = "token"
 
         client = YikYak()
@@ -263,7 +259,7 @@ class TestSuite(unittest.TestCase):
         mock_yak.return_value = mock.Mock()
 
         client = YikYak()
-        client.auth_token = 'auth_token'
+        client.session = mock.Mock()
 
         yak = client.get_yak('R/abcd')
 
@@ -274,5 +270,5 @@ class TestSuite(unittest.TestCase):
         }
 
         mock_request.assert_called_with('GET', url, params=params)
-        mock_yak.assert_called_with('auth_token', mock_request.return_value)
+        mock_yak.assert_called_with(client.session, mock_request.return_value)
         self.assertEqual(yak, mock_yak.return_value)

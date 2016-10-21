@@ -5,10 +5,10 @@ from .message import Message
 
 
 class Yak(Message):
-    def __init__(self, auth_token, json):
+    def __init__(self, session, json):
         super().__init__()
 
-        self.auth_token = auth_token
+        self.session = session
 
         self._comments_list = []
         self.can_downvote = json.get('canDownVote', False)
@@ -68,7 +68,7 @@ class Yak(Message):
 
     @comments_list.setter
     def comments_list(self, json):
-        self._comments_list = [Comment(self.auth_token, data) for data in json]
+        self._comments_list = [Comment(self.session, data) for data in json]
 
     @property
     def message_url(self):
@@ -103,7 +103,7 @@ class Yak(Message):
             'comment': comment,
         }
         response = self._request('POST', url, params=self.params, json=json)
-        return Comment(self.auth_token, response)
+        return Comment(self.session, response)
 
     def refresh(self):
         """
@@ -111,4 +111,4 @@ class Yak(Message):
         """
         url = self.message_url
         data = self._request('GET', url, params=self.params)
-        self = self.__init__(self.auth_token, data)
+        self = self.__init__(self.session, data)

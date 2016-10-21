@@ -4,10 +4,10 @@ from .message import Message
 
 
 class Comment(Message):
-    def __init__(self, auth_token, json):
+    def __init__(self, session, json):
         super().__init__()
 
-        self.auth_token = auth_token
+        self.session = session
 
         self.back_id = json.get('backID', '')
         self.comment = json.get('comment', '')

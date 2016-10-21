@@ -6,6 +6,7 @@ from yikyakapi.comment import Comment
 
 class TestSuite(unittest.TestCase):
     def test_constructor(self):
+        session = mock.Mock()
         data = {
             'backID': '001',
             'comment': 'Hello World',
@@ -22,9 +23,9 @@ class TestSuite(unittest.TestCase):
             'time': '2016-01-01 10:00:00',
         }
 
-        comment = Comment('auth_token', data)
+        comment = Comment(session, data)
 
-        self.assertEqual(comment.auth_token, 'auth_token')
+        self.assertEqual(comment.session, session)
         self.assertEqual(comment.base_url, 'https://www.yikyak.com/api/v2/')
 
         self.assertEqual(comment.back_id, data['backID'])
@@ -43,9 +44,10 @@ class TestSuite(unittest.TestCase):
 
     def test_constructor_defaults(self):
         """Assert Comment can be constructed with missing data"""
-        comment = Comment('auth_token', {})
+        session = mock.Mock()
+        comment = Comment(session, {})
 
-        self.assertEqual(comment.auth_token, 'auth_token')
+        self.assertEqual(comment.session, session)
         self.assertEqual(comment.base_url, 'https://www.yikyak.com/api/v2/')
 
         self.assertEqual(comment.back_id, '')
@@ -64,14 +66,14 @@ class TestSuite(unittest.TestCase):
 
     def test_message_url(self):
         """Assert Comment correctly generates its URL"""
-        comment = Comment('auth_token', {})
+        comment = Comment(mock.Mock(), {})
         comment.message_id = 'R/1234'
         comment.comment_id = 'R/abcd'
         expected = 'https://www.yikyak.com/api/v2/messages/R%2F1234/comments/R%2Fabcd/'
         self.assertEqual(comment.message_url, expected)
 
     def test_str(self):
-        comment = Comment('auth_token', {})
+        comment = Comment(mock.Mock(), {})
         comment.message = 'Hello'
         comment_str = comment.__str__()
         self.assertEqual(type(comment_str), str)

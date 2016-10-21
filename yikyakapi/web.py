@@ -7,7 +7,6 @@ from json.decoder import JSONDecodeError
 
 class WebObject(object):
     def __init__(self):
-        self.auth_token = None
         self.base_url = "https://www.yikyak.com/api/v2/"
 
         self.session = requests.Session()
@@ -48,5 +47,5 @@ class WebObject(object):
         Refresh the auth token
         """
         url = 'https://www.yikyak.com/api/auth/token/refresh'
-        auth_token = self._request('POST', url)
-        self.session.headers.update({'x-access-token': auth_token})
+        token = self._request('POST', url)
+        self.session.headers.update({'x-access-token': token})

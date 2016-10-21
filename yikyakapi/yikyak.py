@@ -14,7 +14,7 @@ class YikYak(WebObject):
     @property
     def yakker(self):
         if not self._yakker:
-            self._yakker = Yakker(self.auth_token, {})
+            self._yakker = Yakker(self.session, {})
             self._yakker.refresh()
 
         return self._yakker
@@ -30,8 +30,8 @@ class YikYak(WebObject):
             phone_number (string): phone number
             user_id (string): authentication PIN from app
         """
-        auth_token = self.pair(country_code, phone_number, pin)
-        self.session.headers.update({'x-access-token': auth_token})
+        token = self.pair(country_code, phone_number, pin)
+        self.session.headers.update({'x-access-token': token})
 
     def login_id(self, country_code, phone_number, user_id):
         """
@@ -110,7 +110,7 @@ class YikYak(WebObject):
         response = self._request('GET', url, params=params)
 
         # Generate new Yak objects from the JSON
-        yaks = [Yak(self.auth_token, data) for data in response]
+        yaks = [Yak(self.session, data) for data in response]
         return yaks
 
     def get_new_yaks(self, latitude, longitude):
@@ -190,7 +190,7 @@ class YikYak(WebObject):
         }
 
         data = self._request('GET', url, params=params)
-        return Yak(self.auth_token, data)
+        return Yak(self.session, data)
 
     def compose_yak(self, message, latitude, longitude):
         """
@@ -215,7 +215,7 @@ class YikYak(WebObject):
         }
 
         data = self._request('POST', url, params=params, json=json)
-        return Yak(self.auth_token, data)
+        return Yak(self.session, data)
 
     def check_handle_availability(self, handle):
         """

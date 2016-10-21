@@ -45,9 +45,12 @@ class TestSuite(unittest.TestCase):
         self.img_data.update(self.yak_data)
 
     def test_yak_construction(self):
-        yak = Yak('auth_token', self.img_data)
+        session = mock.Mock()
+        yak = Yak(session, self.img_data)
+
         self.assertEqual(yak.base_url, "https://www.yikyak.com/api/v2/")
-        self.assertEqual(yak.auth_token, 'auth_token')
+        self.assertEqual(yak.session, session)
+
         self.assertEqual(yak.can_downvote, self.img_data['canDownVote'])
         self.assertEqual(yak.can_reply, self.img_data['canReply'])
         self.assertEqual(yak.can_report, self.img_data['canReport'])
@@ -81,8 +84,12 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yak.url, self.img_data['url'])
 
     def test_yak_defaults(self):
-        yak = Yak('auth_token', {})
+        session = mock.Mock()
+        yak = Yak(session, {})
+
+        self.assertEqual(yak.session, session)
         self.assertEqual(yak.base_url, "https://www.yikyak.com/api/v2/")
+
         self.assertEqual(yak.can_downvote, False)
         self.assertEqual(yak.can_reply, False)
         self.assertEqual(yak.can_report, 0)
@@ -122,7 +129,7 @@ class TestSuite(unittest.TestCase):
 
         ._vote() should only accept 'upvote' and 'downvote'
         """
-        yak = Yak('auth_token', self.yak_data)
+        yak = Yak(mock.Mock(), self.yak_data)
 
         with self.assertRaises(AssertionError):
             yak._vote('sidevote')
@@ -132,12 +139,12 @@ class TestSuite(unittest.TestCase):
         Assert a default value is provided for the comments_list if not
         included in the data passed to the constructor
         """
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         self.assertEqual(yak._comments_list, [])
 
     @mock.patch('yikyakapi.yak.Comment')
     def test_comments_list_setter(self, mock_comment):
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         yak.comments_list = range(10)
         self.assertEqual(len(yak._comments_list), 10)
 
@@ -146,7 +153,7 @@ class TestSuite(unittest.TestCase):
         """
         Get the comments list without making a request
         """
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         yak.comments = 3
         yak._comments_list = ['a', 'b', 'c']
 
@@ -157,7 +164,7 @@ class TestSuite(unittest.TestCase):
     @mock.patch('yikyakapi.yak.Yak._request')
     def test_retrieve_comments(self, mock_request):
         """Assert ._retrieve_comments() makes the correct API call"""
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         yak.message_id = 'R/abc'
         yak._retrieve_comments()
 
@@ -175,7 +182,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(comments, mock_request.return_value)
 
     def test_str(self):
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         yak.message = 'Hello'
         yak_str = yak.__str__()
         self.assertEqual(type(yak_str), str)
@@ -185,7 +192,7 @@ class TestSuite(unittest.TestCase):
         """
         Assert composing a comment makes the correct API call
         """
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         comment = yak.compose_comment('Hello world')
 
         # Expected API call
@@ -208,7 +215,7 @@ class TestSuite(unittest.TestCase):
         """
         Assert composing a comment makes the correct API call
         """
-        yak = Yak('auth_token', {})
+        yak = Yak(mock.Mock(), {})
         comment = yak.compose_comment('Hello world', handle=True)
 
         # Expected API call
