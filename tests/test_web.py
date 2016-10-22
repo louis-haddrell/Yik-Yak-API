@@ -12,8 +12,10 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(web.base_url, "https://www.yikyak.com/api/v2/")
 
     def test_session(self):
+        """Ensure the session object is initialised correctly"""
         web = WebObject()
         self.assertEqual(web.session.headers['Referer'], 'https://yikyak.com')
+        self.assertNotIn('User-Agent', web.session.headers)
 
     def test__request(self):
         """Assert ._request uses session object to make requests"""

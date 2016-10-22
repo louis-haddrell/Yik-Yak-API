@@ -11,6 +11,7 @@ class WebObject(object):
 
         self.session = requests.Session()
         self.session.headers.update({'Referer': 'https://yikyak.com'})
+        del self.session.headers['User-Agent']
 
     def _request(self, method, url, **kwargs):
         """
@@ -26,9 +27,9 @@ class WebObject(object):
             url (string): URL to make the request to
             **kwargs: any kwargs allowed by requests.request()
         """
-        logging.debug(method)
-        logging.debug(url)
+        logging.debug("{} {}".format(method, url))
         logging.debug(kwargs)
+        logging.debug(self.session.headers)
 
         response = self.session.request(method, url, **kwargs)
 
