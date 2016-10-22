@@ -59,9 +59,10 @@ class TestSuite(unittest.TestCase):
 
         self.assertEqual(client._yakker, None)
 
+    @mock.patch('yikyakapi.yikyak.Yakker.refresh')
     @mock.patch('yikyakapi.yikyak.YikYak.get_csrf_token')
     @mock.patch('yikyakapi.yikyak.YikYak.pair')
-    def test_login(self, mock_pair, mock_csrf):
+    def test_login(self, mock_pair, mock_csrf, mock_yakker):
         """Assert .login() retrieves the access token and CSRF token"""
         mock_pair.return_value = "access_token"
         mock_csrf.return_value = "csrf_token"
@@ -79,6 +80,8 @@ class TestSuite(unittest.TestCase):
             'X-Csrf-Token': 'csrf_token',
         }
         client.session.headers.update.assert_called_with(headers)
+
+        mock_yakker.assert_called_with()
 
     def test_get_csrf_token(self):
         client = YikYak()

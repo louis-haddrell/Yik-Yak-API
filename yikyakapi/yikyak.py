@@ -12,14 +12,6 @@ class YikYak(WebObject):
         super().__init__()
         self._yakker = None
 
-    @property
-    def yakker(self):
-        if not self._yakker:
-            self._yakker = Yakker(self.session, {})
-            self._yakker.refresh()
-
-        return self._yakker
-
     def get_csrf_token(self):
         """Retrieve the CSRF token from a regular HTML view"""
         response = self.session.get('https://www.yikyak.com/nearby')
@@ -43,6 +35,10 @@ class YikYak(WebObject):
             'x-access-token': access_token,
             'X-Csrf-Token': csrf_token,
         })
+
+        # Initialise Yakker
+        self.yakker = Yakker(self.session, {})
+        self.yakker.refresh()
 
     def login_id(self, country_code, phone_number, user_id):
         """
