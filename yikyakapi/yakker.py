@@ -6,8 +6,10 @@ class Yakker(WebObject):
         super().__init__()
 
         self.session = session
+
         self.herd = data.get('myHerd', None)
         self.nickname = data.get('nickname', None)
+        self.personaID = data.get('personaID', None)
         self.userID = data.get('userID', None)
         self.yakarma = data.get('yakarma', 0)
 
@@ -18,4 +20,5 @@ class Yakker(WebObject):
             'userLong': 0,
         }
         json = self._request('GET', url, params=params)
-        self.__init__(self.session, json)
+        data = json.get('yakker', {})
+        self.__init__(self.session, data)

@@ -10,25 +10,31 @@ class TestSuite(unittest.TestCase):
         data = {
             'myHerd': {},
             'nickname': 'YikYakBot',
-            'userID': 'ABCDEFG',
+            'personaID': 'ABCDEFG',
+            'userID': 'HIJKLMNO',
             'yakarma': 50000,
         }
 
         yakker = Yakker(session, data)
         self.assertEqual(yakker.base_url, 'https://www.yikyak.com/api/v2/')
         self.assertEqual(yakker.session, session)
+
         self.assertEqual(yakker.herd, data['myHerd'])
         self.assertEqual(yakker.nickname, data['nickname'])
+        self.assertEqual(yakker.personaID, data['personaID'])
         self.assertEqual(yakker.userID, data['userID'])
         self.assertEqual(yakker.yakarma, data['yakarma'])
 
     def test_construction_defaults(self):
         session = mock.Mock()
         yakker = Yakker(session, {})
+
         self.assertEqual(yakker.base_url, 'https://www.yikyak.com/api/v2/')
         self.assertEqual(yakker.session, session)
+
         self.assertEqual(yakker.herd, None)
         self.assertEqual(yakker.nickname, None)
+        self.assertEqual(yakker.personaID, None)
         self.assertEqual(yakker.userID, None)
         self.assertEqual(yakker.yakarma, 0)
 
