@@ -220,12 +220,18 @@ class TestSuite(unittest.TestCase):
             'userLong': -1.76,
         }
         json = {
-            'handle': True,
+            'handle': False,
             'message': 'Hello World',
         }
 
-        yak = client.compose_yak("Hello World", 50.93, -1.76)
+        # Anonymous
+        yak = client.compose_yak("Hello World", 50.93, -1.76, False)
         self.assertTrue(isinstance(yak, Yak))
+        mock_request.assert_called_with('POST', url, params=params, json=json)
+
+        # With handle
+        json['handle'] = True
+        client.compose_yak("Hello World", 50.93, -1.76, True)
         mock_request.assert_called_with('POST', url, params=params, json=json)
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
