@@ -87,7 +87,7 @@ class Yak(Message):
         url = self.message_url + 'comments'
         return self._request('GET', url, params=self.params)
 
-    def compose_comment(self, comment):
+    def compose_comment(self, comment, handle):
         """
         Add a comment below this Yak
 
@@ -99,7 +99,7 @@ class Yak(Message):
         """
         url = self.message_url + 'comments'
         json = {
-            'handle': True,
+            'handle': handle,
             'comment': comment,
         }
         response = self._request('POST', url, params=self.params, json=json)
