@@ -115,11 +115,11 @@ class TestSuite(unittest.TestCase):
         # Expected request
         url = 'https://www.yikyak.com/'
         params = {
-            'userLat': 0,
-            'userLong': 0,
+            'feedType': 'new',
             'lat': 0,
             'long': 0,
-            'myHerd': 0,
+            'userLat': 0,
+            'userLong': 0,
         }
 
         mock_request.assert_called_with('GET', url, params=params)
@@ -134,11 +134,11 @@ class TestSuite(unittest.TestCase):
         # Expected request
         url = 'https://www.yikyak.com/'
         params = {
-            'userLat': 50.93,
-            'userLong': -1.76,
+            'feedType': 'new',
             'lat': 50.93,
             'long': -1.76,
-            'myHerd': 0,
+            'userLat': 50.93,
+            'userLong': -1.76,
         }
 
         mock_request.assert_called_with('GET', url, params=params)
@@ -149,13 +149,15 @@ class TestSuite(unittest.TestCase):
         client.get_new_yaks(12.34, 56.78)
 
         url = 'https://www.yikyak.com/api/v2/messages'
-        mock_get.assert_called_with(url, 12.34, 56.78)
+        mock_get.assert_called_with(url, 12.34, 56.78, 'new')
 
-    def test_get_hot_yaks(self):
+    @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
+    def test_get_hot_yaks(self, mock_get):
         client = YikYak()
+        client.get_hot_yaks(12.34, 56.78)
 
-        with self.assertRaises(NotImplementedError):
-            client.get_hot_yaks(12.34, 56.78)
+        url = 'https://www.yikyak.com/api/v2/messages'
+        mock_get.assert_called_with(url, 12.34, 56.78, 'hot')
 
     @mock.patch('yikyakapi.yikyak.YikYak._get_yaks')
     def test_get_my_yaks(self, mock_get):

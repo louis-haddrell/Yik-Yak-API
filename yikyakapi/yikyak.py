@@ -91,7 +91,7 @@ class YikYak(WebObject):
         self._yakker = None
         return response
 
-    def _get_yaks(self, url, latitude=0, longitude=0):
+    def _get_yaks(self, url, latitude=0, longitude=0, feed_type='new'):
         """
         Retrieve Yaks from a URL
 
@@ -107,11 +107,11 @@ class YikYak(WebObject):
             List of Yak objects from the feed
         """
         params = {
-            'userLat': latitude,
-            'userLong': longitude,
+            'feedType': feed_type,
             'lat': latitude,
             'long': longitude,
-            'myHerd': 0,
+            'userLat': latitude,
+            'userLong': longitude,
         }
 
         response = self._request('GET', url, params=params)
@@ -132,11 +132,21 @@ class YikYak(WebObject):
             List of Yak objects
         """
         url = self.base_url + 'messages'
-        return self._get_yaks(url, latitude, longitude)
+        return self._get_yaks(url, latitude, longitude, 'new')
 
     def get_hot_yaks(self, latitude, longitude):
-        """The hot feed functionality has been removed in API V2"""
-        raise NotImplementedError("Removed in API V2")
+        """
+        Retrieve hot Yaks from a location
+
+        Arguments:
+            latitude (float): location latitude
+            longitude (float): location longitude
+
+        Returns:
+            List of Yak objects
+        """
+        url = self.base_url + 'messages'
+        return self._get_yaks(url, latitude, longitude, 'hot')
 
     def get_my_yaks(self):
         """
