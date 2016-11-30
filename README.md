@@ -77,5 +77,5 @@ client.compose_yak("Hello world!", 50.93, -1.759, False)
 Post a Yak to a co-ordinate with your handle enabled:
 
 ```python
-client.compose_yak("Hello world!", 50.93, -1.759, False)
+client.compose_yak("Hello world!", 50.93, -1.759, True)
 ```
