@@ -2,18 +2,27 @@
 
 ## Quickstart
 
-Create a new Python module *outside* of the `yikyakapi` folder to avoid import errors e.g.
+### Prerequisites
+
+The API requires Python 3 and the [requests library](http://docs.python-requests.org/en/master/), which can be installed using pip:
+
+```bash
+pip3 install requests
+```
+
+### Folder Structure
+Create a new Python module *outside* of the `yikyakapi` folder to avoid import errors
 
 ```
 |- yikyakapi/
 |- yakbot.py
 ```
 
-### Login using PIN
+### Retrieving User ID
 
-Logging in to the YikYak API requires a 6 digit authentication code that can be found in the app under Settings > Authenticate for Web.
+Logging in to YikYak Web requires a 6 digit authentication code. This can be found in the app under Settings > Authenticate for Web. To avoid authenticating with the app every time we want to log in, we must first retrieve our user ID. Note that this is not the same as your handle.
 
-You must log in using your phone number country code, phone number and the PIN code.
+The following example code will print out this ID. Remember to update `COUNTRY_CODE` and `PHONE_NUMBER` to your details - a list of country codes can be found in [API documentation](api.md).
 
 ```python
 from yikyakapi.yikyak import YikYak
@@ -25,27 +34,32 @@ if __name__ == "__main__":
     client = YikYak()
     pin = input("Web authentication PIN: ")
     client.login(COUNTRY_CODE, PHONE_NUMBER, pin)
+    print(client.yakker.userID)
 ```
 
-### Retrieving User ID
-Once you've logged in using the PIN code you can grab your user ID. **Keep this ID a secret!**
 
-```
-user_id = client.yakker.userID
-print(user_id)
-```
+Your user ID will be displayed. It is important to **keep this ID secret!**
 
-### Login using User ID
+### Authenticating with User ID
 
-You can now use this user ID to avoid ever having to authenticate using the app.
+Now we can easily authenticate using our user ID instead of the PIN code:
 
 ```python
+from yikyakapi.yikyak import YikYak
+
+COUNTRY_CODE = "GBR"
+PHONE_NUMBER = "0123456789"
 USER_ID = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-client.login_id(COUNTRY_CODE, PHONE_NUMBER, USER_ID)
+if __name__ == "__main__":
+    client = YikYak()
+    pin = input("Web authentication PIN: ")
+    client.login_id(COUNTRY_CODE, PHONE_NUMBER, USER_ID)
 ```
 
-### Retrieve some Yaks
+## The Basics
+
+### Retrieving Yaks
 
 Retrieve Yaks from a co-ordinate:
 
@@ -54,8 +68,14 @@ yaks = client.get_new_yaks(50.93, -1.759)
 ```
 
 ### Post a Yak
-Post a Yak to a co-ordinate:
+Post a Yak to a co-ordinate anonymously:
 
 ```python
-client.compose_yak("Hello world!", 50.93, -1.759)
+client.compose_yak("Hello world!", 50.93, -1.759, False)
+```
+
+Post a Yak to a co-ordinate with your handle enabled:
+
+```python
+client.compose_yak("Hello world!", 50.93, -1.759, False)
 ```
