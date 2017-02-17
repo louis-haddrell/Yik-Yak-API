@@ -22,25 +22,15 @@ class Message(WebObject):
         """Make sure to implement this in subclasses"""
         raise NotImplementedError
 
-    def _vote(self, action):
-        """
-        Internal function to upvote or downvote the message
-
-        Arguments:
-            action (string): downvote / upvote
-        """
-        assert action in ['downvote', 'upvote']
-
-        url = self.message_url + action
-        self._request('PUT', url, params=self.params)
-
     def downvote(self):
         """Apply a downvote"""
-        self._vote('downvote')
+        url = self.message_url + "downvote"
+        self._request('PUT', url, params=self.params)
 
     def upvote(self):
         """Apply an upvote"""
-        self._vote('upvote')
+        url = self.message_url + "upvote"
+        self._request('PUT', url, params=self.params)
 
     def delete(self):
         """Delete this Message"""

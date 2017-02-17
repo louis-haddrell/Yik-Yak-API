@@ -11,19 +11,13 @@ class TestSuite(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             message.message_url
 
-    def test_vote_invalid(self):
-        message = Message()
-
-        with self.assertRaises(AssertionError):
-            message._vote('qwerty')
-
     @mock.patch('yikyakapi.yak.Message._request')
     @mock.patch('yikyakapi.yak.Message.message_url')
     def test_vote_upvote(self, mock_url, mock_request):
         mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
 
         message = Message()
-        message._vote('upvote')
+        message.upvote()
 
         # Expected API call
         method = 'PUT'
@@ -41,7 +35,7 @@ class TestSuite(unittest.TestCase):
         mock_url.__get__ = mock.Mock(return_value='https://www.yikyak.com/')
 
         message = Message()
-        message._vote('downvote')
+        message.downvote()
 
         # Expected API call
         method = 'PUT'
@@ -52,18 +46,6 @@ class TestSuite(unittest.TestCase):
         }
 
         mock_request.assert_called_with(method, url, params=params)
-
-    @mock.patch('yikyakapi.yak.Message._vote')
-    def test_downvote(self, mock_vote):
-        message = Message()
-        message.downvote()
-        mock_vote.assert_called_with('downvote')
-
-    @mock.patch('yikyakapi.yak.Message._vote')
-    def test_upvote(self, mock_vote):
-        message = Message()
-        message.upvote()
-        mock_vote.assert_called_with('upvote')
 
     @mock.patch('yikyakapi.yak.Message._request')
     @mock.patch('yikyakapi.yak.Message.message_url')

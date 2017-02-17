@@ -123,17 +123,6 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(yak.type, 0)
         self.assertEqual(yak.url, None)
 
-    def test_invalid_vote(self):
-        """
-        Assert that Yak._vote() throws an exception with invalid vote types
-
-        ._vote() should only accept 'upvote' and 'downvote'
-        """
-        yak = Yak(mock.Mock(), self.yak_data)
-
-        with self.assertRaises(AssertionError):
-            yak._vote('sidevote')
-
     def test_comments_list_constructor_default(self):
         """
         Assert a default value is provided for the comments_list if not
