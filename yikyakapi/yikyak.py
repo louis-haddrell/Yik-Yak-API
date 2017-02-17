@@ -203,14 +203,38 @@ class YikYak(WebObject):
         data = self._request('GET', url, params=params)
         return Yak(self.session, data)
 
-    def compose_yak(self, message, latitude, longitude, handle):
+    def _get_aws_url(self):
+        """Request an ID / URL for uploading images"""
+        url = "https://www.yikyak.com/api/v2/photo/getUrl"
+        return self._request('GET', url)
+
+    def _upload_image(self, image):
         """
         Compose a new Yak at a co-ordinate
 
         Arguments:
-            message (string): contents of Yak
-            latitude (float): location latitude
-            longitude (float): location longitude
+            image   file    file to upload
+
+        Returns:
+            ID of uploaded image for use in Yak submission
+        """
+        response = self._get_aws_url()
+        self._request('PUT', response['url'], data=image.read())
+        return response['imageId']
+
+    def compose_yak(self, message, latitude, longitude, handle, image=None):
+        """
+        Compose a new Yak at a co-ordinate
+
+        Arguments:
+            message     string    Yak body text
+            latitude    float     coordinate latitude
+            longitude   float     coordinate longitude
+            handle      boolean   should we post using the handle?
+            image       file      optional image file
+
+        Returns:
+            Yak object for the newly created post
         """
         url = self.base_url + 'messages'
         params = {
@@ -225,8 +249,12 @@ class YikYak(WebObject):
             'message': message,
         }
 
-        data = self._request('POST', url, params=params, json=json)
-        return Yak(self.session, data)
+        if image:
+            image_id = self._upload_image(image)
+            json['imageId'] = image_id
+
+        resp = self._request('POST', url, params=params, json=json)
+        return Yak(self.session, resp)
 
     def check_handle_availability(self, handle):
         """

@@ -317,3 +317,53 @@ class TestSuite(unittest.TestCase):
         mock_request.assert_called_with('GET', url, params=params)
         mock_yak.assert_called_with(client.session, mock_request.return_value)
         self.assertEqual(yak, mock_yak.return_value)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._upload_image')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test_compose_yak_image(self, mock_request, mock_upload):
+        client = YikYak()
+
+        # Expected request
+        url = "https://www.yikyak.com/api/v2/messages"
+        params = {
+            'lat': 50.93,
+            'long': -1.76,
+            'myHerd': 0,
+            'userLat': 50.93,
+            'userLong': -1.76,
+        }
+        json = {
+            'handle': False,
+            'message': 'Hello World',
+            'imageId': mock_upload.return_value,
+        }
+
+        image = mock.Mock()
+        client.compose_yak("Hello World", 50.93, -1.76, False, image)
+        mock_request.assert_called_with('POST', url, params=params, json=json)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test__get_aws_url(self, mock_request):
+        client = YikYak()
+        client._get_aws_url()
+
+        url = "https://www.yikyak.com/api/v2/photo/getUrl"
+        mock_request.assert_called_with('GET', url)
+
+    @mock.patch('yikyakapi.yikyak.YikYak._get_aws_url')
+    @mock.patch('yikyakapi.yikyak.YikYak._request')
+    def test__upload_image(self, mock_request, mock_aws):
+        mock_aws.return_value = {
+            'url': "test.com",
+            'imageId': "abc123",
+        }
+
+        client = YikYak()
+
+        image = mock.Mock()
+        image_id = client._upload_image(image)
+
+        self.assertEqual(image_id, "abc123")
+
+        mock_aws.assert_called_with()
+        mock_request.assert_called_with('PUT', "test.com", data=image.read.return_value)
