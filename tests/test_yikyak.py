@@ -1,5 +1,7 @@
 import json
 import unittest
+import warnings
+
 from unittest import mock
 
 from yikyakapi.yikyak import *
@@ -53,35 +55,117 @@ class TestSuite(unittest.TestCase):
     def test_pair_yakker(self, mock_request):
         """Cached yakker should be cleared on loging"""
         client = YikYak()
-        client._yakker = mock.Mock()
+        client.yakker = mock.Mock()
 
         client.pair("GBR", "1234567890", "123456")
 
-        self.assertEqual(client._yakker, None)
+        self.assertEqual(client.yakker, None)
+
+    def test_login(self):
+        """Test deprecation of .login()"""
+        client = YikYak()
+        client.login_pin = mock.Mock()
+
+        with warnings.catch_warnings(record=True) as warns:
+            warnings.simplefilter("always")
+
+            client.login("GBR", "1234567890", "123456")
+            client.login_pin.assert_called_with("GBR", "1234567890", "123456")
+
+            self.assertEqual(1, len(warns))
+            self.assertEqual(DeprecationWarning, warns[-1].category)
+            self.assertEqual(
+                "YikYak.login() is deprecated. Please use YikYak.login_pin()",
+                str(warns[-1].message)
+            )
+
+    @mock.patch('yikyakapi.yikyak.Yakker')
+    def test_login_pin(self, mock_yakker):
+        """Assert .login_pin() retrieves the access token and CSRF token"""
+        client = YikYak()
+        client.pair = mock.Mock()
+        client.pair.return_value = "ACCESSTOKEN"
+        client.get_csrf_token = mock.Mock()
+        client.get_csrf_token.return_value = "CSRFTOKEN"
+
+        client.login_pin("GBR", "1234567890", "123456")
+
+        client.pair.assert_called_with("GBR", "1234567890", "123456")
+        client.get_csrf_token.assert_called_with()
+
+        self.assertIn('x-access-token', client.session.headers)
+        self.assertEqual("ACCESSTOKEN", client.session.headers['x-access-token'])
+
+        self.assertIn('X-Csrf-Token', client.session.headers)
+        self.assertEqual("CSRFTOKEN", client.session.headers['X-Csrf-Token'])        
+
+        # Ensure the Yakker object has been initialised correctly
+        self.assertNotEqual(None, client.yakker)
+        client.yakker.refresh.assert_called_with()
+
+
+    @mock.patch('yikyakapi.yikyak.Yakker')
+    def test_login_pin_whitespace(self, mock_yakker):
+        """Ensure whitespace is stripped from the PIN"""
+        client = YikYak()
+        client.pair = mock.Mock()
+        client.get_csrf_token = mock.Mock()
+
+        client.login_pin("GBR", "1234567890", " 1 2 3 4 5 6 ")
+
+        client.pair.assert_called_with("GBR", "1234567890", "123456")
 
     @mock.patch('yikyakapi.yikyak.Yakker.refresh')
     @mock.patch('yikyakapi.yikyak.YikYak.get_csrf_token')
     @mock.patch('yikyakapi.yikyak.YikYak.pair')
-    def test_login(self, mock_pair, mock_csrf, mock_yakker):
-        """Assert .login() retrieves the access token and CSRF token"""
-        mock_pair.return_value = "access_token"
-        mock_csrf.return_value = "csrf_token"
-
+    def test_login_pin_bad_pin(self, mock_pair, mock_csrf, mock_yakker):
+        """Raise warning if the PIN code looks invalid"""
         client = YikYak()
         client.session = mock.Mock()
 
-        # Assert .pair() is called
-        client.login("GBR", "1234567890", "123456")
-        mock_pair.assert_called_with("GBR", "1234567890", "123456")
-        mock_csrf.assert_called_with()
+        with warnings.catch_warnings(record=True) as warns:
+            warnings.simplefilter("always")
+            client.login_pin("GBR", "1234567890", "ABCDEFGH")
+            self.assertEqual(1, len(warns))
+            self.assertIn("PIN may be invalid", str(warns[0].message))
 
-        headers = {
-            'x-access-token': 'access_token',
-            'X-Csrf-Token': 'csrf_token',
-        }
-        client.session.headers.update.assert_called_with(headers)
+    @mock.patch('yikyakapi.yikyak.Yakker.refresh')
+    @mock.patch('yikyakapi.yikyak.YikYak.get_csrf_token')
+    @mock.patch('yikyakapi.yikyak.YikYak.pair')
+    def test_login_pin_bad_pin_2(self, mock_pair, mock_csrf, mock_yakker):
+        """Raise warning if the PIN code looks invalid"""
+        client = YikYak()
+        client.session = mock.Mock()
 
-        mock_yakker.assert_called_with()
+        with warnings.catch_warnings(record=True) as warns:
+            warnings.simplefilter("always")
+            client.login_pin("GBR", "1234567890", "1234567")
+            self.assertEqual(1, len(warns))
+            self.assertIn("PIN may be invalid", str(warns[0].message))
+
+    def test_login_id(self):
+        """Test the process of logging in with the user ID"""
+        client = YikYak()
+        client.login_pin = mock.Mock()
+        client.init_pairing = mock.Mock()
+        client.init_pairing.return_value = "123456"
+
+        client.login_id("GBR", "1234567890", "ABCDEFG")
+
+        client.init_pairing.assert_called_with("ABCDEFG")
+        client.login_pin.assert_called_with("GBR", "1234567890", "123456")
+
+    def test_login_id_pin(self):
+        """Raise warning if the UserId looks like a PIN code"""
+        client = YikYak()
+        client.login_pin = mock.Mock()
+        client.init_pairing = mock.Mock()
+
+        with warnings.catch_warnings(record=True) as warns:
+            warnings.simplefilter("always")
+            client.login_id("GBR", "1234567890", "123456")
+            self.assertEqual(1, len(warns))
+            self.assertIn("PIN", str(warns[0].message)) 
 
     def test_get_csrf_token(self):
         client = YikYak()
@@ -95,15 +179,6 @@ class TestSuite(unittest.TestCase):
 
         token = client.get_csrf_token()
         self.assertEqual(token, 'ekyJ0Oht-HaDXAMs6fd_H1Qz-E7GZvNkAzS0')
-
-    @mock.patch('yikyakapi.yikyak.YikYak.init_pairing')
-    @mock.patch('yikyakapi.yikyak.YikYak.login')
-    def test_login_id(self, mock_login, mock_init_pairing):
-        mock_init_pairing.return_value = "123456"
-
-        client = YikYak()
-        client.login_id("GBR", "1234567890", "ABCDEFG")
-        mock_login.assert_called_with("GBR", "1234567890", "123456")
 
     @mock.patch('yikyakapi.yikyak.YikYak._request')
     def test__get_yaks(self, mock_request):

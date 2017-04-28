@@ -10,7 +10,7 @@ from .yakker import Yakker
 class YikYak(WebObject):
     def __init__(self):
         super().__init__()
-        self._yakker = None
+        self.yakker = None
 
     def get_csrf_token(self):
         """Retrieve the CSRF token from a regular HTML view"""
@@ -19,16 +19,31 @@ class YikYak(WebObject):
         return re.search(pattern, response.text).group(1)
 
     def login(self, country_code, phone_number, pin):
-        """
-        Login to YikYak and get our access and CSRF tokens
+        """Deprecated: Please use .login_pin() instead"""
+        message = "YikYak.login() is deprecated. Please use YikYak.login_pin()"
+        warnings.warn(message, DeprecationWarning)
+        self.login_pin(country_code, phone_number, pin)
 
-        See documentation for country codes
+    def login_pin(self, country_code, phone_number, pin):
+        """
+        Login to YikYak using the app's 'Authenticate for Web' PIN code
 
         Arguments:
             country_code (string): country code
             phone_number (string): phone number
-            user_id (string): authentication PIN from app
+            pin          (string): six-digit PIN code from app
         """
+
+        # Strip all whitespace from PIN
+        pin = "".join(str(pin).split())
+
+        # Raise warning if PIN looks incorrect
+        regex = re.compile(r'^\d{6}$')
+        if not regex.match(pin):
+            message = "PIN may be invalid. Expected six digit code but got {}"
+            message = message.format(pin)
+            warnings.warn(message)
+
         access_token = self.pair(country_code, phone_number, pin)
         csrf_token = self.get_csrf_token()
         self.session.headers.update({
@@ -42,15 +57,40 @@ class YikYak(WebObject):
 
     def login_id(self, country_code, phone_number, user_id):
         """
-        Alternate login with YikYak user ID instead of auth PIN
+        Login to YikYak with your User ID
+
+        This is not the same as your YikYak username / handle. It can be
+        retrieved by first logging in with your PIN code
+
+        >> COUNTRY_CODE = "XXX"
+        >> PHONE_NUMBER = "0123456789"
+        >>
+        >> client = YikYak()
+        >> pin = input("Web authentication PIN: ")
+        >> client.login_pin(COUNTRY_CODE, PHONE_NUMBER, pin)
+        >> print(client.yakker.userID)        
 
         Arguments:
             country_code (string): country code
             phone_number (string): phone number
-            user_id (string): YikYak user ID
+            user_id      (string): YikYak user ID
         """
+
+        # Strip all whitespace from user_id
+        user_id = "".join(str(user_id).split())
+
+        # Raise warning if User ID looks like PIN
+        regex = re.compile(r'^\d{6}$')
+        if regex.match(user_id):
+            message = (
+                "Provided user ID ({}) looks like a PIN code. Did you mean to "
+                "use login_pin()?"
+            )
+            message = message.format(user_id)
+            warnings.warn(message)
+
         pin = self.init_pairing(user_id)
-        self.login(country_code, phone_number, pin)
+        self.login_pin(country_code, phone_number, pin)
 
     def init_pairing(self, user_id):
         """
@@ -88,7 +128,7 @@ class YikYak(WebObject):
         }
 
         response = self._request('POST', url, json=json)
-        self._yakker = None
+        self.yakker = None
         return response
 
     def _get_yaks(self, url, latitude=0, longitude=0, feed_type='new'):

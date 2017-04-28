@@ -33,7 +33,7 @@ PHONE_NUMBER = "0123456789"
 if __name__ == "__main__":
     client = YikYak()
     pin = input("Web authentication PIN: ")
-    client.login(COUNTRY_CODE, PHONE_NUMBER, pin)
+    client.login_pin(COUNTRY_CODE, PHONE_NUMBER, pin)
     print(client.yakker.userID)
 ```
 
