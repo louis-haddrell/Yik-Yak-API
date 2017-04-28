@@ -37,8 +37,9 @@ if __name__ == "__main__":
     print(client.yakker.userID)
 ```
 
+Your user ID will be displayed. This is a 32 character hex string and is not the same as your YikYak username / handle.
 
-Your user ID will be displayed. It is important to **keep this ID secret!**
+**It is important to keep this ID secret!**
 
 ### Authenticating with User ID
 
@@ -49,7 +50,7 @@ from yikyakapi.yikyak import YikYak
 
 COUNTRY_CODE = "GBR"
 PHONE_NUMBER = "0123456789"
-USER_ID = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+USER_ID = '0123456789ABCDEF0123456789ABCDEF'
 
 if __name__ == "__main__":
     client = YikYak()
