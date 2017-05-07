@@ -1,5 +1,8 @@
 # Python Yik Yak API
 
+> **Note: YikYak servers are no longer active**
+> YikYak has shut down so this API will no longer work
+
 ## Quickstart
 
 ### Prerequisites
