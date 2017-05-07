@@ -1,11 +1,11 @@
-#YikYak Web API
+# YikYak Web API
 
-##Rate Limiting
+## Rate Limiting
 The API is rate limited to 30 requests per 60 seconds. Breaching this limit will cause the server to return an `HTTP 429` code, so take it slow.
 
-##JSON Objects
+## JSON Objects
 
-###Yak
+### Yak
 
 |Key|Value Type|Description
 |---|---|---
@@ -42,7 +42,7 @@ The API is rate limited to 30 requests per 60 seconds. Breaching this limit will
 |`thumbNailUrl`|url|Link to thumb
 |`url`|url|Link to full size image
 
-###Comment
+### Comment
 |Key|Value|Notes
 |---|---|---
 |`backID`|string|Icon background
@@ -59,9 +59,9 @@ The API is rate limited to 30 requests per 60 seconds. Breaching this limit will
 |`posterID`|string
 |`time`|timestamp|`YYYY-MM-DD HH:MM:SS`
 
-##Authenticating
+## Authenticating
 
-###Pairing
+### Pairing
 `POST https://www.yikyak.com/api/auth/pair`  
 
 To perform any further actions with the Web Beta API, we need an authentication token which can be retrieved using our country code, phone number and YikYak auth PIN (either from the mobile app, or retrieved from `initPairing`).
@@ -85,7 +85,7 @@ To perform any further actions with the Web Beta API, we need an authentication 
 **Response** (JSON)  
 Authentication token string
 
-####Country Codes
+#### Country Codes
 Country codes are as follows. It appears that either the two or three character codes can be used:
 
 |Country|Short Code|Long Code
@@ -306,7 +306,7 @@ Country codes are as follows. It appears that either the two or three character 
 |Zimbabwe|ZW|ZWE
 
 
-###Automatic PIN Code Retrieval
+### Automatic PIN Code Retrieval
 `POST https://www.yikyak.com/api/auth/initPairing`
 
 If you know your Yik Yak user ID, we avoid having to manually check the app by automatically retrieving the PIN from the API.
@@ -326,7 +326,7 @@ If you know your Yik Yak user ID, we avoid having to manually check the app by a
 }
 ```
 
-###Refreshing Access Token
+### Refreshing Access Token
 `POST https://www.yikyak.com/api/auth/token/refresh`
 
 **Request Headers**
@@ -340,7 +340,7 @@ If you know your Yik Yak user ID, we avoid having to manually check the app by a
 **Response**
 New auth token
 
-##Authenticated Operations
+## Authenticated Operations
 
 Once we have retrieved the authentication token, we can interact with the API.
 
@@ -355,7 +355,7 @@ For all authenticated operations, the following headers must be sent:
  
 
 
-###Yakker
+### Yakker
 `GET https://www.yikyak.com/api/v2/yakker`  
 
 **Response**
@@ -378,7 +378,7 @@ For all authenticated operations, the following headers must be sent:
 }
 ```
 
-###New / Hot Yak Feed
+### New / Hot Yak Feed
 `GET https://www.yikyak.com/api/v2/messages/all/new`  
 `GET https://www.yikyak.com/api/v2/messages/all/hot`  
 
@@ -395,10 +395,10 @@ long=<longitude>
 **Response**  
 Returns up to 200(?) Yak objects
 
-###Compose a Yak
+### Compose a Yak
 `POST https://www.yikyak.com/api/v2/messages`
 
-####Request Parameters
+#### Request Parameters
 |Key|Value Type|Description
 |---|---|---|
 |`lat`|float|Latitude to post to
@@ -406,7 +406,7 @@ Returns up to 200(?) Yak objects
 |`userLat`|float|No noticeable effect; set to `0`
 |`userLong`|float|No noticeable effect; set to `0`
 
-####Request Body
+#### Request Body
 
 |Key|Value Type|Description
 |---|---|---|
@@ -416,7 +416,7 @@ Returns up to 200(?) Yak objects
 > **Note**
 > `handle` is currently optional and defaults to `false`
 
-###Yak Details
+### Yak Details
 `GET https://www.yikyak.com/api/v2/messages/<yak_id>`
 
 > **Note**
@@ -453,7 +453,7 @@ userLong=0.0
 **Response**  
 JSON parse fails on the response. Probably a malformed Yak object.
 
-###Delete a Yak
+### Delete a Yak
 `DELETE https://www.yikyak.com/api/v2/messages/<yak_id>`
 
 > **Note**
@@ -467,7 +467,7 @@ userLat=0.0
 userLong=0.0
 ```
 
-###Report a Yak
+### Report a Yak
 `PUT https://www.yikyak.com/api/v2/messages/<yak_id>/report`
 
 > **Note**
@@ -493,28 +493,28 @@ Selecting to block the poster of a Yak will prevent you from ever seeing their Y
 
 Reason must be one of the following: `Offensive`, `Other`, `Spam`, `Targeting`
 
-###Check Handle Availability
+### Check Handle Availability
 `GET https://www.yikyak.com/api/v2/yakker/handles`
 
-####Request Parameters
+#### Request Parameters
 |Key|Value Type|Description
 |---|---|---|
 |`handle`|string|Handle to claim
 
-####JSON Response
+#### JSON Response
 |Key|Value Type|Description
 |---|---|---|
 |`code`|int|`0` success; `1` invalid; `2` taken
 
-###Claim Handle
+### Claim Handle
 `POST https://www.yikyak.com/api/v2/yakker/handles`
 
-####Request Body
+#### Request Body
 |Key|Value Type|Description
 |---|---|---|
 |`handle`|string|Handle to claim
 
-####JSON Response
+#### JSON Response
 |Key|Value Type|Description
 |---|---|---|
 |`code`|int|`0` success; `1` invalid; `2` taken
